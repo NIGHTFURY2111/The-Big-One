@@ -6,7 +6,7 @@
             "id": "f5537731-d246-4718-a621-c8d96c21c63a",
             "actions": [
                 {
-                    "name": "movememnt",
+                    "name": "movement",
                     "type": "Value",
                     "id": "c9c7fecd-ef2e-4543-b7ca-f7beb85a25ac",
                     "expectedControlType": "Vector2",
@@ -50,7 +50,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "movememnt",
+                    "action": "movement",
                     "isComposite": true,
                     "isPartOfComposite": false
                 },
@@ -61,7 +61,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "movememnt",
+                    "action": "movement",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -72,7 +72,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "movememnt",
+                    "action": "movement",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -83,7 +83,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "movememnt",
+                    "action": "movement",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -94,7 +94,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "movememnt",
+                    "action": "movement",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -123,7 +123,7 @@
                 {
                     "name": "",
                     "id": "7ce73021-8054-400b-8d75-176781998936",
-                    "path": "<Mouse>/position",
+                    "path": "<Mouse>/delta",
                     "interactions": "",
                     "processors": "",
                     "groups": "",

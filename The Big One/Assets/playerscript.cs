@@ -1,51 +1,121 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class playerscript : MonoBehaviour
+[RequireComponent(typeof(CharacterController))]
+
+public class SC_FPSController : MonoBehaviour
 {
-    // Start is called before the first frame update
+    public float walkingSpeed = 7.5f;
+    public float runningSpeed = 11.5f;
+    public float jumpSpeed = 8.0f;
+    public float gravity = 20.0f;
+    public Camera playerCamera;
+    public float lookSpeed;
+    public float lookXLimit = 45.0f;
+
+    private bool DashPressed;
+    private bool JumpPressed;
+
+    CharacterController characterController;
+    Vector3 moveDirection = Vector3.zero;
+    float rotationX = 0;
+
+    [HideInInspector]
+    public bool canMove = true;
     
     private Controller control;
     private InputAction move;
     private InputAction direction;
-    [SerializeField] private Rigidbody rb;
-    [SerializeField] private float speed;
-    [SerializeField] private float lookingSpeed;
-    [SerializeField] private Camera cam;
+    private InputAction dash;
+    private InputAction jump;
 
     #region input
     private void Awake()
     {
         control = new Controller();
-        move = control.player.movememnt;
+        move = control.player.movement;
         direction = control.player.camera;
+        dash = control.player.dash;
+        jump = control.player.jump;
+        
     }
 
     private void OnEnable()
     {
         move.Enable();
         direction.Enable();
+        dash.Enable();
+        jump.Enable();
     }
 
     private void OnDisable()
     {
         move.Disable();
         direction.Disable();
+        dash.Disable();
+        jump.Disable();
     }
     #endregion
+
     void Start()
-    {
-        
+        {
+            lookSpeed *=0.5f ;
+            characterController = GetComponent<CharacterController>();
+
+        // Lock cursor
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
-    // Update is called once per frame
     void Update()
     {
-        Moving();
-        Looking();
-        cam.transform.position = transform.position;
+        DashPressed = dash.WasPressedThisFrame();
+        JumpPressed = jump.WasPressedThisFrame();
+
+
+        //moving the player
+        PlayerMovement();
+        // Applying gravity
+        Artificialgravity();
+
+        // Move the controller
+        characterController.Move(moveDirection * Time.deltaTime);
+
+        // Player and Camera rotation
+        cameraMovement();
+    }
+    void cameraMovement()
+    {
+        { 
+        if (canMove)
+            rotationX += -LookDir().y * lookSpeed;
+            rotationX = Mathf.Clamp(rotationX, -lookXLimit, lookXLimit);
+            playerCamera.transform.localRotation = Quaternion.Euler(rotationX, 0, 0);
+            transform.rotation *= Quaternion.Euler(0, LookDir().x * lookSpeed, 0);
+        }
+    }
+
+    void PlayerMovement()
+    {
+        // We are grounded, so recalculate move direction based on axes
+        Vector3 forward = transform.TransformDirection(Vector3.forward);
+        Vector3 right = transform.TransformDirection(Vector3.right);
+
+
+        // Press Left Shift to run
+
+
+        float curSpeedX = canMove ? walkingSpeed * MoveDir().y : 0;
+        float curSpeedY = canMove ? walkingSpeed * MoveDir().x : 0;
+
+        float movementDirectionY = moveDirection.y;
+        moveDirection = (forward * curSpeedX) + (right * curSpeedY);
+
+
+        moveDirection.y = (JumpPressed && canMove && characterController.isGrounded) ? jumpSpeed : movementDirectionY;
     }
 
     Vector2 MoveDir()
@@ -56,16 +126,15 @@ public class playerscript : MonoBehaviour
     {
         return direction.ReadValue<Vector2>();
     }
-
-    void Moving()
+    void Artificialgravity()
     {
-        rb.velocity = new Vector3(MoveDir().x*speed,0,MoveDir().y*speed);
+        if (!characterController.isGrounded)
+        {
+            moveDirection.y -= gravity * Time.deltaTime;
+        }
+        else
+        {
+            moveDirection.y = Math.Clamp(moveDirection.y, -2, int.MaxValue);
+        }
     }
-    void Looking()
-    {
-        rb.rotation = Quaternion.Euler(0,Mathf.Atan2(LookDir().y,LookDir().x)*Mathf.Rad2Deg-45,0);
-        cam.transform.rotation = Quaternion.Euler(Mathf.Atan2(LookDir().x, LookDir().y ) * Mathf.Rad2Deg-45, Mathf.Atan2(LookDir().y, LookDir().x) * Mathf.Rad2Deg-45, 0);
-        
-    }
-    
 }

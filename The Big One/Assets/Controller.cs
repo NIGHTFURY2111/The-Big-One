@@ -28,7 +28,7 @@ public partial class @Controller: IInputActionCollection2, IDisposable
             ""id"": ""f5537731-d246-4718-a621-c8d96c21c63a"",
             ""actions"": [
                 {
-                    ""name"": ""movememnt"",
+                    ""name"": ""movement"",
                     ""type"": ""Value"",
                     ""id"": ""c9c7fecd-ef2e-4543-b7ca-f7beb85a25ac"",
                     ""expectedControlType"": ""Vector2"",
@@ -72,7 +72,7 @@ public partial class @Controller: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""movememnt"",
+                    ""action"": ""movement"",
                     ""isComposite"": true,
                     ""isPartOfComposite"": false
                 },
@@ -83,7 +83,7 @@ public partial class @Controller: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""movememnt"",
+                    ""action"": ""movement"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
@@ -94,7 +94,7 @@ public partial class @Controller: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""movememnt"",
+                    ""action"": ""movement"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
@@ -105,7 +105,7 @@ public partial class @Controller: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""movememnt"",
+                    ""action"": ""movement"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
@@ -116,7 +116,7 @@ public partial class @Controller: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""movememnt"",
+                    ""action"": ""movement"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
@@ -145,7 +145,7 @@ public partial class @Controller: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""7ce73021-8054-400b-8d75-176781998936"",
-                    ""path"": ""<Mouse>/position"",
+                    ""path"": ""<Mouse>/delta"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -160,7 +160,7 @@ public partial class @Controller: IInputActionCollection2, IDisposable
 }");
         // player
         m_player = asset.FindActionMap("player", throwIfNotFound: true);
-        m_player_movememnt = m_player.FindAction("movememnt", throwIfNotFound: true);
+        m_player_movement = m_player.FindAction("movement", throwIfNotFound: true);
         m_player_dash = m_player.FindAction("dash", throwIfNotFound: true);
         m_player_jump = m_player.FindAction("jump", throwIfNotFound: true);
         m_player_camera = m_player.FindAction("camera", throwIfNotFound: true);
@@ -225,7 +225,7 @@ public partial class @Controller: IInputActionCollection2, IDisposable
     // player
     private readonly InputActionMap m_player;
     private List<IPlayerActions> m_PlayerActionsCallbackInterfaces = new List<IPlayerActions>();
-    private readonly InputAction m_player_movememnt;
+    private readonly InputAction m_player_movement;
     private readonly InputAction m_player_dash;
     private readonly InputAction m_player_jump;
     private readonly InputAction m_player_camera;
@@ -233,7 +233,7 @@ public partial class @Controller: IInputActionCollection2, IDisposable
     {
         private @Controller m_Wrapper;
         public PlayerActions(@Controller wrapper) { m_Wrapper = wrapper; }
-        public InputAction @movememnt => m_Wrapper.m_player_movememnt;
+        public InputAction @movement => m_Wrapper.m_player_movement;
         public InputAction @dash => m_Wrapper.m_player_dash;
         public InputAction @jump => m_Wrapper.m_player_jump;
         public InputAction @camera => m_Wrapper.m_player_camera;
@@ -246,9 +246,9 @@ public partial class @Controller: IInputActionCollection2, IDisposable
         {
             if (instance == null || m_Wrapper.m_PlayerActionsCallbackInterfaces.Contains(instance)) return;
             m_Wrapper.m_PlayerActionsCallbackInterfaces.Add(instance);
-            @movememnt.started += instance.OnMovememnt;
-            @movememnt.performed += instance.OnMovememnt;
-            @movememnt.canceled += instance.OnMovememnt;
+            @movement.started += instance.OnMovement;
+            @movement.performed += instance.OnMovement;
+            @movement.canceled += instance.OnMovement;
             @dash.started += instance.OnDash;
             @dash.performed += instance.OnDash;
             @dash.canceled += instance.OnDash;
@@ -262,9 +262,9 @@ public partial class @Controller: IInputActionCollection2, IDisposable
 
         private void UnregisterCallbacks(IPlayerActions instance)
         {
-            @movememnt.started -= instance.OnMovememnt;
-            @movememnt.performed -= instance.OnMovememnt;
-            @movememnt.canceled -= instance.OnMovememnt;
+            @movement.started -= instance.OnMovement;
+            @movement.performed -= instance.OnMovement;
+            @movement.canceled -= instance.OnMovement;
             @dash.started -= instance.OnDash;
             @dash.performed -= instance.OnDash;
             @dash.canceled -= instance.OnDash;
@@ -293,7 +293,7 @@ public partial class @Controller: IInputActionCollection2, IDisposable
     public PlayerActions @player => new PlayerActions(this);
     public interface IPlayerActions
     {
-        void OnMovememnt(InputAction.CallbackContext context);
+        void OnMovement(InputAction.CallbackContext context);
         void OnDash(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
         void OnCamera(InputAction.CallbackContext context);
