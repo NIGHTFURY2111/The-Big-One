@@ -358,6 +358,7 @@
 -analyzer:"D:/unity/2022.3.0f1/Editor/Data/Tools/Unity.SourceGenerators/Unity.SourceGenerators.dll"
 "Assets/Controller.cs"
 "Assets/playerscript.cs"
+"Assets/PlayerState.cs"
 -langversion:9.0
 
 /deterministic

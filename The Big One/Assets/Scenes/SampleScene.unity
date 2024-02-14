@@ -619,7 +619,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1346652889}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.7859192, y: 50.6, z: -24.210001}
+  m_LocalPosition: {x: 9.37, y: 50.6, z: -24.210001}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -833,7 +833,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2002667262}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 121.2, z: -23.1}
+  m_LocalPosition: {x: 10, y: 65.07, z: -23.1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -854,13 +854,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   walkingSpeed: 7.5
-  runningSpeed: 11.5
+  dashSpeed: 100
   jumpSpeed: 8
   gravity: 20
   playerCamera: {fileID: 963194227}
-  lookSpeed: 0.3
+  lookSpeed: 0.15
   lookXLimit: 45
-  canMove: 1
+  dashtime: 0.2
 --- !u!143 &2002667269
 CharacterController:
   m_ObjectHideFlags: 0

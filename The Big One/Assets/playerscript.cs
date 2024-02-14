@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -9,22 +10,24 @@ using UnityEngine.InputSystem;
 public class SC_FPSController : MonoBehaviour
 {
     public float walkingSpeed = 7.5f;
-    public float runningSpeed = 11.5f;
+    public float dashSpeed = 11.5f;
     public float jumpSpeed = 8.0f;
     public float gravity = 20.0f;
     public Camera playerCamera;
     public float lookSpeed;
     public float lookXLimit = 45.0f;
+    public float dashtime;
 
     private bool DashPressed;
     private bool JumpPressed;
+  
 
     CharacterController characterController;
     Vector3 moveDirection = Vector3.zero;
     float rotationX = 0;
 
     [HideInInspector]
-    public bool canMove = true;
+   
     
     private Controller control;
     private InputAction move;
@@ -32,10 +35,14 @@ public class SC_FPSController : MonoBehaviour
     private InputAction dash;
     private InputAction jump;
 
+    private PlayerState PlayerState;
+    
+
     #region input
     private void Awake()
     {
-        control = new Controller();
+        control = new();
+        PlayerState = new();
         move = control.player.movement;
         direction = control.player.camera;
         dash = control.player.dash;
@@ -64,6 +71,7 @@ public class SC_FPSController : MonoBehaviour
         {
             lookSpeed *=0.5f ;
             characterController = GetComponent<CharacterController>();
+            
 
         // Lock cursor
         Cursor.lockState = CursorLockMode.Locked;
@@ -74,7 +82,8 @@ public class SC_FPSController : MonoBehaviour
     {
         DashPressed = dash.WasPressedThisFrame();
         JumpPressed = jump.WasPressedThisFrame();
-
+        StartCoroutine(Dashing());
+        Debug.Log(moveDirection);
 
         //moving the player
         PlayerMovement();
@@ -90,7 +99,7 @@ public class SC_FPSController : MonoBehaviour
     void cameraMovement()
     {
         { 
-        if (canMove)
+        if (PlayerState.canMove)
             rotationX += -LookDir().y * lookSpeed;
             rotationX = Mathf.Clamp(rotationX, -lookXLimit, lookXLimit);
             playerCamera.transform.localRotation = Quaternion.Euler(rotationX, 0, 0);
@@ -100,35 +109,41 @@ public class SC_FPSController : MonoBehaviour
 
     void PlayerMovement()
     {
-        // We are grounded, so recalculate move direction based on axes
-        Vector3 forward = transform.TransformDirection(Vector3.forward);
-        Vector3 right = transform.TransformDirection(Vector3.right);
-
-
-        // Press Left Shift to run
-
-
-        float curSpeedX = canMove ? walkingSpeed * MoveDir().y : 0;
-        float curSpeedY = canMove ? walkingSpeed * MoveDir().x : 0;
 
         float movementDirectionY = moveDirection.y;
-        moveDirection = (forward * curSpeedX) + (right * curSpeedY);
+        if(PlayerState.canMove)
+        {
+            moveDirection = MovementVector() * walkingSpeed;
+        }
+       
 
-
-        moveDirection.y = (JumpPressed && canMove && characterController.isGrounded) ? jumpSpeed : movementDirectionY;
+        moveDirection.y = (JumpPressed && PlayerState.canMove && characterController.isGrounded) ? jumpSpeed : movementDirectionY;
     }
 
     Vector2 MoveDir()
     {
         return move.ReadValue<Vector2>();
     }
+
     Vector2 LookDir()
     {
         return direction.ReadValue<Vector2>();
     }
+
+    Vector3 MovementVector ()
+    {
+        // We are grounded, so recalculate move direction based on axes
+        Vector3 forward = transform.forward;
+        Vector3 right = transform.right;
+
+        Vector3 outp = forward * MoveDir().y + right * MoveDir().x;
+        return outp;
+        //return canMove? outp:Vector3.zero;
+    }
+
     void Artificialgravity()
     {
-        if (!characterController.isGrounded)
+        if (!characterController.isGrounded && PlayerState.canMove)
         {
             moveDirection.y -= gravity * Time.deltaTime;
         }
@@ -136,5 +151,19 @@ public class SC_FPSController : MonoBehaviour
         {
             moveDirection.y = Math.Clamp(moveDirection.y, -2, int.MaxValue);
         }
+    }
+
+    IEnumerator Dashing()
+    {
+        if(PlayerState.canDash() && dash.WasPerformedThisFrame())
+        {
+            PlayerState.Dashing();
+
+            //moveDirection = MovementVector( ) * dashSpeed;
+            moveDirection = ((MoveDir().magnitude==0) ? transform.forward: MovementVector())  * dashSpeed;
+            yield return new WaitForSecondsRealtime(dashtime);
+            PlayerState.Default();
+        }
+       
     }
 }
