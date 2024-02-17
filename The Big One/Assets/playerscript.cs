@@ -7,7 +7,7 @@ using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(CharacterController))]
 
-public class SC_FPSController : MonoBehaviour
+public class PlayerScript : MonoBehaviour
 {
     public float walkingSpeed = 7.5f;
     public float dashSpeed = 11.5f;
@@ -17,16 +17,13 @@ public class SC_FPSController : MonoBehaviour
     public float lookSpeed;
     public float lookXLimit = 45.0f;
     public float dashtime;
-
-    private bool DashPressed;
-    private bool JumpPressed;
   
 
-    CharacterController characterController;
     Vector3 moveDirection = Vector3.zero;
     float rotationX = 0;
 
     [HideInInspector]
+    public CharacterController characterController;
    
     
     private Controller control;
@@ -41,38 +38,38 @@ public class SC_FPSController : MonoBehaviour
     #region input
     private void Awake()
     {
+        characterController = GetComponent<CharacterController>();
         control = new();
-        PlayerState = new();
+
         move = control.player.movement;
-        direction = control.player.camera;
         dash = control.player.dash;
         jump = control.player.jump;
+        direction = control.player.camera;
         
     }
 
     private void OnEnable()
     {
         move.Enable();
-        direction.Enable();
         dash.Enable();
         jump.Enable();
+        direction.Enable();
     }
 
     private void OnDisable()
     {
         move.Disable();
-        direction.Disable();
         dash.Disable();
         jump.Disable();
+        direction.Disable();
     }
     #endregion
 
     void Start()
-        {
-            lookSpeed *=0.5f ;
-            characterController = GetComponent<CharacterController>();
+    {
+        lookSpeed *=0.5f ;
+        PlayerState = GetComponent<PlayerState>();
             
-
         // Lock cursor
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -80,13 +77,13 @@ public class SC_FPSController : MonoBehaviour
 
     void Update()
     {
-        DashPressed = dash.WasPressedThisFrame();
-        JumpPressed = jump.WasPressedThisFrame();
+        //Dashing player
         StartCoroutine(Dashing());
-        Debug.Log(moveDirection);
+        //Debug.Log(PlayerState.canJump());
 
         //moving the player
         PlayerMovement();
+
         // Applying gravity
         Artificialgravity();
 
@@ -98,26 +95,30 @@ public class SC_FPSController : MonoBehaviour
     }
     void cameraMovement()
     {
-        { 
+         
         if (PlayerState.canMove)
             rotationX += -LookDir().y * lookSpeed;
-            rotationX = Mathf.Clamp(rotationX, -lookXLimit, lookXLimit);
-            playerCamera.transform.localRotation = Quaternion.Euler(rotationX, 0, 0);
-            transform.rotation *= Quaternion.Euler(0, LookDir().x * lookSpeed, 0);
-        }
+
+        rotationX = Mathf.Clamp(rotationX, -lookXLimit, lookXLimit);
+
+        playerCamera.transform.localRotation = Quaternion.Euler(rotationX, 0, 0);
+
+        transform.rotation *= Quaternion.Euler(0, LookDir().x * lookSpeed, 0);
+        
     }
 
     void PlayerMovement()
     {
-
-        float movementDirectionY = moveDirection.y;
+        //float movementDirectionY = moveDirection.y;
         if(PlayerState.canMove)
         {
-            moveDirection = MovementVector() * walkingSpeed;
+            moveDirection.x = MovementVector().x * walkingSpeed;
+            moveDirection.z = MovementVector().z * walkingSpeed;
         }
-       
 
-        moveDirection.y = (JumpPressed && PlayerState.canMove && characterController.isGrounded) ? jumpSpeed : movementDirectionY;
+        if (jump.WasPressedThisFrame() && PlayerState.canJump())
+            moveDirection.y = jumpSpeed; 
+        //moveDirection.y = (jump.WasPressedThisFrame() && PlayerState.canJump()) ? jumpSpeed : movementDirectionY;
     }
 
     Vector2 MoveDir()
@@ -138,7 +139,7 @@ public class SC_FPSController : MonoBehaviour
 
         Vector3 outp = forward * MoveDir().y + right * MoveDir().x;
         return outp;
-        //return canMove? outp:Vector3.zero;
+
     }
 
     void Artificialgravity()
