@@ -362,6 +362,16 @@
 "Assets/script/Controller.cs"
 "Assets/script/playerscript.cs"
 "Assets/script/PlayerState.cs"
+"Assets/script/stateMachine/BaseState.cs"
+"Assets/script/stateMachine/CheckInput.cs"
+"Assets/script/stateMachine/DashState.cs"
+"Assets/script/stateMachine/FallState.cs"
+"Assets/script/stateMachine/IdleState.cs"
+"Assets/script/stateMachine/JumpState.cs"
+"Assets/script/stateMachine/MoveState.cs"
+"Assets/script/stateMachine/PlayerStateMachine.cs"
+"Assets/script/stateMachine/SlideState.cs"
+"Assets/script/stateMachine/State Factory.cs"
 -langversion:9.0
 
 /deterministic

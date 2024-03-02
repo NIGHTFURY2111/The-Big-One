@@ -10,6 +10,12 @@ public class PlayerState
         this.player = player;
         Default();
     }
+    //public PlayerState(PlayerStateMachine player)
+    //{
+    //    this.player = player;
+    //    Default();
+    //}
+
 
     public void Walking()
     {

@@ -15,24 +15,24 @@ public class PlayerScript : MonoBehaviour
     public float jumpSpeed;
     public float slideSpeed;
 
-    
+
     [Header("Dash Settings")]
     public float dashSpeed;
     public float dashtime;
-    
+
 
     [Header("Camera Settings")]
     public Camera playerCamera;
     public float lookSpeed;
     public float lookXLimit;
-  
+
 
     [HideInInspector]
     public CharacterController characterController;
- 
 
-   
-    
+
+
+
     private float rotationX = 0;
     private Vector3 slidedir = Vector3.zero;
     private Vector3 moveDirection = Vector3.zero;
@@ -44,7 +44,7 @@ public class PlayerScript : MonoBehaviour
     private InputAction slide;
 
     private PlayerState PlayerState;
-    
+
 
     #region input
     private void Awake()
@@ -58,7 +58,7 @@ public class PlayerScript : MonoBehaviour
         jump = control.player.jump;
         slide = control.player.slide;
         direction = control.player.camera;
-        
+
     }
 
     private void OnEnable()
@@ -83,9 +83,9 @@ public class PlayerScript : MonoBehaviour
 
     void Start()
     {
-        lookSpeed *=0.5f ;
+        lookSpeed *= 0.5f;
         PlayerState = new PlayerState(this);
-            
+
         // Lock cursor
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -112,7 +112,7 @@ public class PlayerScript : MonoBehaviour
     }
     void cameraMovement()
     {
-         
+
         if (PlayerState.canMove)
             rotationX += -LookDir().y * lookSpeed;
 
@@ -123,20 +123,20 @@ public class PlayerScript : MonoBehaviour
 
 
         transform.rotation *= Quaternion.Euler(0, LookDir().x * lookSpeed, 0);
-        
+
     }
 
     void PlayerMovement()
     {
         //float movementDirectionY = moveDirection.y;
-        if(PlayerState.canMove)
+        if (PlayerState.canMove)
         {
             moveDirection.x = MovementVector().x * walkingSpeed;
             moveDirection.z = MovementVector().z * walkingSpeed;
-        }        
+        }
 
         if (jump.WasPressedThisFrame() && PlayerState.canJump())
-            moveDirection.y = jumpSpeed; 
+            moveDirection.y = jumpSpeed;
         //moveDirection.y = (jump.WasPressedThisFrame() && PlayerState.canJump()) ? jumpSpeed : movementDirectionY;
     }
 
@@ -150,7 +150,7 @@ public class PlayerScript : MonoBehaviour
         return direction.ReadValue<Vector2>();
     }
 
-    Vector3 MovementVector ()
+    Vector3 MovementVector()
     {
         // We are grounded, so recalculate move direction based on axes
         Vector3 forward = transform.forward;
@@ -165,26 +165,26 @@ public class PlayerScript : MonoBehaviour
         if (PlayerState.canSlide() && slide.WasPerformedThisFrame())
         {
             PlayerState.Sliding();
-            transform.localScale = new Vector3(1,0.5f,1);
-                slidedir = ((MoveDir().magnitude == 0) ? transform.forward : MovementVector());
+            transform.localScale = new Vector3(1, 0.5f, 1);
+            slidedir = ((MoveDir().magnitude == 0) ? transform.forward : MovementVector());
         }
-        else if(slide.WasReleasedThisFrame())
+        else if (slide.WasReleasedThisFrame())
         {
             PlayerState.Default();
-            transform.localScale = new Vector3(1,1,1);
+            transform.localScale = new Vector3(1, 1, 1);
         }
 
         if (PlayerState.isSliding)
         {
 
             moveDirection.x = slidedir.x * slideSpeed;
-            moveDirection.z = slidedir.z * slideSpeed;       
+            moveDirection.z = slidedir.z * slideSpeed;
 
             if (jump.WasPressedThisFrame() && PlayerState.canJump())
-                moveDirection.y = jumpSpeed; 
+                moveDirection.y = jumpSpeed;
         }
 
-        
+
     }
     void Artificialgravity()
     {
@@ -200,15 +200,14 @@ public class PlayerScript : MonoBehaviour
 
     IEnumerator Dashing()
     {
-        if(PlayerState.canDash() && dash.WasPerformedThisFrame())
+        if (PlayerState.canDash() && dash.WasPerformedThisFrame())
         {
             PlayerState.Dashing();
 
             //moveDirection = MovementVector( ) * dashSpeed;
-            moveDirection = ((MoveDir().magnitude==0) ? transform.forward: MovementVector())  * dashSpeed;
+            moveDirection = ((MoveDir().magnitude == 0) ? transform.forward : MovementVector()) * dashSpeed;
             yield return new WaitForSecondsRealtime(dashtime);
             PlayerState.Default();
         }
-       
     }
 }

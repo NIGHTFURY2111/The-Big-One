@@ -1,0 +1,10 @@
+------TODO------
+Convert all movement to states
+make a main file to run all the code
+A base state
+a next state method
+a generic enum
+figure out how to implement fall
+
+figure out what to do of the Checkinput.cs file
+------DONE------
