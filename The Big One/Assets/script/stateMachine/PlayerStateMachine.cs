@@ -21,6 +21,15 @@ public class PlayerStateMachine : MonoBehaviour
     [SerializeField] float dashSpeed;
     [SerializeField] float dashtime;
 
+    [Header("Wall Settings")]
+    [SerializeField] float wallSlideSpeed;
+    [SerializeField] float wallRunTime;
+    [SerializeField] float wallRunDecay;
+    [SerializeField] float maxWallMovingAngle;
+    [SerializeField] float minWallMovingAngle;
+    [SerializeField] float maxWallLookingAngle;
+    [SerializeField] float minWallLookingAngle;
+
     [Header("Camera Settings")]
     [SerializeField] float lookSpeed;
     [SerializeField] Camera playerCamera;
@@ -33,6 +42,7 @@ public class PlayerStateMachine : MonoBehaviour
 
 
 
+    public event Action<ControllerColliderHit> Collide;
     private float rotationX = 0;
     private Vector3 slidedir = Vector3.zero;
     private Vector3 moveDirection = Vector3.zero;
@@ -42,8 +52,10 @@ public class PlayerStateMachine : MonoBehaviour
     private InputAction dash;
     private InputAction jump;
     private InputAction slide;
+    private ControllerColliderHit collision;
+    
 
-    private PlayerState PlayerState;
+    //private PlayerState PlayerState;
 
 
     #region input
@@ -99,10 +111,11 @@ public class PlayerStateMachine : MonoBehaviour
         //Debug.Log(currentState + " " + moveDirection);
         //moving the player
         //PlayerMovement();
-
-        currentState.UpdateState();
+        //Debug.Log(collision);
         // Applying gravity
         Artificialgravity();
+        currentState.UpdateState();
+        Debug.Log(currentState);
         // Move the controller
         characterController.Move(moveDirection * Time.deltaTime);
 
@@ -164,6 +177,16 @@ public class PlayerStateMachine : MonoBehaviour
         {
             moveDirection.y = Math.Clamp(moveDirection.y, -2, int.MaxValue);
         }
+        
+    }
+
+    private void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        //Debug.Log(collision);
+        //this.collision = hit;
+        Collide?.Invoke(hit);
+        
+        
     }
 
     #region getters and setters (DO NOT OPEN IF NOT NECESSARY, BRAINROT GURANTEED)
@@ -171,6 +194,7 @@ public class PlayerStateMachine : MonoBehaviour
     public float _walkingSpeed { get { return walkingSpeed; } set { walkingSpeed = value; } }
     public float _jumpSpeed { get { return jumpSpeed; } set { jumpSpeed = value; } }
     public float _slideSpeed { get { return slideSpeed; } set { slideSpeed = value; } }
+    public float _wallSlideSpeed { get { return wallSlideSpeed; } set { wallSlideSpeed = value; } }
     public float _dashSpeed { get { return dashSpeed; } set { dashSpeed = value; } }
     public float _dashtime { get { return dashtime; } set { dashtime = value; } }
     public float _lookSpeed { get { return lookSpeed; } set { lookSpeed= value; } }
@@ -186,6 +210,13 @@ public class PlayerStateMachine : MonoBehaviour
     public InputAction _jump{get{return jump;} set{ jump = value;}}
     public InputAction _slide{get{return slide;} set{slide = value;}}
     public BaseState _currentState { get { return currentState; } set { currentState = value; } }
+    public float _wallRunTime { get { return wallRunTime; } set { wallRunTime = value; } }
+    public float _wallRunDecay { get { return wallRunDecay; } set { wallRunDecay = value; } }
+    public float _maxWallMovingAngle{ get { return maxWallMovingAngle; } set { maxWallMovingAngle = value; } }
+    public float _minWallMovingAngle{get{return minWallMovingAngle;} set { minWallMovingAngle = value; } }
+    public float _maxWalllookingAngle{get{return maxWallLookingAngle;} set { maxWallLookingAngle = value; } }
+    public float _minWalllookingAngle{get{return minWallLookingAngle;} set { minWallLookingAngle = value; } }
+    //public ControllerColliderHit _collision { get { return collision; } set {  collision = value; } }
 
     #endregion
 }

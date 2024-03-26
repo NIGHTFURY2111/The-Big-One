@@ -2,11 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using System;
 
 public class SlideState : BaseState
 {
+    public event Action slideExit;
+    public static SlideState Instance;
     public SlideState(PlayerStateMachine ctx, StateFactory factory) : base(ctx, factory)
     {
+        Instance = this;
     }
 
     Vector3 slidedir;
@@ -28,8 +32,10 @@ public class SlideState : BaseState
     public override void ExitState()
     {
         ctx.transform.localScale = new Vector3(1, 1, 1);
+        slideExit?.Invoke();
         
     }
+
 
     public override void CheckSwitchState()
     {   //jump fall idle dash
@@ -50,6 +56,7 @@ public class SlideState : BaseState
         if (ctx._jump.WasPerformedThisFrame())
         {
             SwitchState(factory.Jump());
+
             return;
         }
         //Idle
