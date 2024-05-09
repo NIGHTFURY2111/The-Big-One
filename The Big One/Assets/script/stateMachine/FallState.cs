@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -9,6 +10,7 @@ public class FallState : BaseState
     private bool slideCheck = false;
     private float angle;
     private float speed;
+    public event Action wallAngle;
     public FallState(PlayerStateMachine ctx, StateFactory factory) : base(ctx, factory)
     {
         instance = this;
@@ -74,15 +76,19 @@ public class FallState : BaseState
     {
         if (hit.gameObject.CompareTag("wall"))
         {
-            angle = Vector3.Angle(hit.normal, hit.moveDirection);
-            if (angle <= ctx._maxWallMovingAngle && angle >= ctx._minWallMovingAngle)
+            angle = Vector3.SignedAngle(hit.normal, hit.moveDirection,Vector3.up);
+            Debug.Log(angle);
+            if (Mathf.Clamp(angle,-ctx._maxWallMovingAngle,ctx._maxWallMovingAngle) == angle)
             {
-                Debug.Log(angle);
+                WallRunState wrss = (WallRunState)factory.WallRun();
+                wrss._angle = angle;
+                wrss._hit = hit;
                 SwitchState(factory.WallRun());
                 return;
             }
            
             SwitchState(factory.WallSlide());
+
             
             return;
 

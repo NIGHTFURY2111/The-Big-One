@@ -115,7 +115,7 @@ public class PlayerStateMachine : MonoBehaviour
         // Applying gravity
         Artificialgravity();
         currentState.UpdateState();
-        Debug.Log(currentState);
+        //Debug.Log(currentState);
         // Move the controller
         characterController.Move(moveDirection * Time.deltaTime);
 
