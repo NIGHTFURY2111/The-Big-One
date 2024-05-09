@@ -1,0 +1,7 @@
+------TODO------
+wall logic (looking vs moving angle difference figure out karo)
+spammable dash (static variable)
+controller controls (isinprogress())
+revamp air movement(use forces)
+------DONE------
+gravity in dash state
