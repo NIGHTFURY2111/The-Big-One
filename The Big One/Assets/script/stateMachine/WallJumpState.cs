@@ -8,11 +8,11 @@ public class WallJumpState : BaseState
 {
     Vector3 JumpVector;
     ControllerColliderHit hit;
-    public static WallJumpState Instance;
+    public static WallJumpState instance;
     //float timer = 0.5f;
     public WallJumpState(PlayerStateMachine ctx, StateFactory factory) : base(ctx, factory)
     {
-        Instance = this;
+        instance = this;
     }
 
 
