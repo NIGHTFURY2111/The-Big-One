@@ -54,6 +54,7 @@ public class StateFactory
     WallSlideState wallSlideState;
     WallJumpState wallJumpState;
     WallRunState wallRunState;
+    WallRunJumpState wallRunJumpState;
     public StateFactory(PlayerStateMachine currentContext)
     {
         _context = currentContext;
@@ -66,10 +67,10 @@ public class StateFactory
         wallJumpState = new WallJumpState(_context,this);
         wallSlideState = new WallSlideState(_context,this);
         wallRunState = new WallRunState(_context,this);
+        wallRunJumpState = new WallRunJumpState(_context,this);
 
-        SlideState.Instance.slideExit += JumpState.instance.slideEnter;
-        SlideState.Instance.slideExit += FallState.instance.slideEnter;
         _context.Collide += WallJumpState.instance.getCollider;
+        //_context.Collide += WallRunState.instance.getCollider;
         //_context.Collide += WallRunState.instance.getCollider;
         // ctx.Collide += FallState.instance.wallCollide;(un/subscribed in fallstate)
     }
@@ -123,6 +124,10 @@ public class StateFactory
     public BaseState WallRun()
     {
         return wallRunState;
+    }
+    public BaseState WallRunJumpState()
+    {
+        return wallRunJumpState;
     }
 
     //DO THE SAME FOR ALL CLASSES

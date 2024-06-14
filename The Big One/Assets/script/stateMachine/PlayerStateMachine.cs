@@ -1,20 +1,20 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class PlayerStateMachine : MonoBehaviour
 {
     StateFactory stateFactory;
     BaseState currentState;
-
+    public Text speed;
+    public float slideNormalizingTime;
     [Header("General Settings")]
     [SerializeField] float gravity;
     [SerializeField] float walkingSpeed;
     [SerializeField] float jumpSpeed;
     [SerializeField] float slideSpeed;
+    [SerializeField] float forceAppliedInAir;
 
 
     [Header("Dash Settings")]
@@ -23,6 +23,7 @@ public class PlayerStateMachine : MonoBehaviour
 
     [Header("Wall Settings")]
     [SerializeField] float wallSlideSpeed;
+    [SerializeField] float minWallRunSpeed;
     [SerializeField] float wallRunTime;
     [SerializeField] float wallRunDecay;
     [SerializeField] float maxWallMovingAngle;
@@ -43,6 +44,7 @@ public class PlayerStateMachine : MonoBehaviour
 
 
     public event Action<ControllerColliderHit> Collide;
+    public event Action<string> TEMPCollide;
     private float rotationX = 0;
     private Vector3 slidedir = Vector3.zero;
     private Vector3 moveDirection = Vector3.zero;
@@ -117,7 +119,12 @@ public class PlayerStateMachine : MonoBehaviour
         currentState.UpdateState();
         //Debug.Log(currentState);
         // Move the controller
+
         characterController.Move(moveDirection * Time.deltaTime);
+        //displays the current speed
+        
+        speed.text = Math.Round(characterController.velocity.magnitude).ToString();
+
 
         // Player and Camera rotation
         cameraMovement();
@@ -185,9 +192,9 @@ public class PlayerStateMachine : MonoBehaviour
         //Debug.Log(collision);
         //this.collision = hit;
         Collide?.Invoke(hit);
-        
-        
+        TEMPCollide?.Invoke("hello");
     }
+
 
     #region getters and setters (DO NOT OPEN IF NOT NECESSARY, BRAINROT GURANTEED)
     public float _gravity {  get {return gravity; }set { gravity = value; } }
@@ -198,6 +205,7 @@ public class PlayerStateMachine : MonoBehaviour
     public float _dashSpeed { get { return dashSpeed; } set { dashSpeed = value; } }
     public float _dashtime { get { return dashtime; } set { dashtime = value; } }
     public float _lookSpeed { get { return lookSpeed; } set { lookSpeed= value; } }
+    public float _forceAppliedInAir { get { return forceAppliedInAir; } set { forceAppliedInAir = value; } }
 
     //public Vector3 _moveDirection { get { return moveDirection; } set { moveDirection = value; } }
     public float _moveDirectionX { get { return moveDirection.x; } set { moveDirection.x = value; } }
@@ -213,11 +221,16 @@ public class PlayerStateMachine : MonoBehaviour
     public float _wallRunTime { get { return wallRunTime; } set { wallRunTime = value; } }
     public float _wallRunDecay { get { return wallRunDecay; } set { wallRunDecay = value; } }
     public float _maxWallMovingAngle{ get { return maxWallMovingAngle; } set { maxWallMovingAngle = value; } }
+    public float _minWallSlideSpeed { get { return minWallRunSpeed; } }
     public float _minWallMovingAngle{get{return minWallMovingAngle;} set { minWallMovingAngle = value; } }
     public float _maxWalllookingAngle{get{return maxWallLookingAngle;} set { maxWallLookingAngle = value; } }
-    public float _minWalllookingAngle{get{return minWallLookingAngle;} set { minWallLookingAngle = value; } }
-    //public ControllerColliderHit _collision { get { return collision; } set {  collision = value; } }
 
+    public float _minWalllookingAngle{get{return minWallLookingAngle;} set { minWallLookingAngle = value; } }
+    public float _magnitude { get { return characterController.velocity.magnitude; } }     //this is to return the current velocity of the player
+
+    public float _slideNormalizingTime { get { return slideNormalizingTime; } }
+
+    //public ControllerColliderHit _collision { get { return collision; } set {  collision = value; } }
     #endregion
 }
 

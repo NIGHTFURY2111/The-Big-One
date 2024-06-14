@@ -7,7 +7,6 @@ using UnityEngine;
 public class FallState : BaseState
 {
     public static FallState instance;
-    private bool slideCheck = false;
     private float angle;
     private float speed;
     public event Action wallAngle;
@@ -20,32 +19,41 @@ public class FallState : BaseState
     public override void EnterState()
     {
         ctx.Collide += FallState.instance.wallCollide;
-        if (slideCheck)
-        {
-            speed = ctx._slideSpeed;
-        }
-        else
-        {
-            speed = ctx._walkingSpeed;
-        }
+        speed = (ctx._magnitude< ctx._walkingSpeed) ? ctx._walkingSpeed : ctx._magnitude;
+        ctx._moveDirectionX = ctx._characterController.velocity.x;
+        ctx._moveDirectionZ = ctx._characterController.velocity.z;
+
+        //if (slideCheck)
+        //{
+        //    speed = ctx._slideSpeed;
+        //}
+        //else
+        //{
+        //    speed = ctx._walkingSpeed;
+        //}
     }
     public override void UpdateState()
     {
-        ctx._moveDirectionX = ctx.MovementVector().x * speed;
-        ctx._moveDirectionZ = ctx.MovementVector().z * speed;
+        ctx._moveDirectionX = ctx._characterController.velocity.x;
+        ctx._moveDirectionZ = ctx._characterController.velocity.z;
+        if (ctx.MovementVector() == Vector3.zero)
+        {
+            ctx._moveDirectionX -= ctx._characterController.velocity.normalized.x * Time.deltaTime;
+            ctx._moveDirectionZ -= ctx._characterController.velocity.normalized.z * Time.deltaTime;
+        }
+        else
+        {
+            ctx._moveDirectionX += ctx.MovementVector().x * ctx._forceAppliedInAir * Time.deltaTime;
+            ctx._moveDirectionZ += ctx.MovementVector().z * ctx._forceAppliedInAir * Time.deltaTime;
+        }
+
         CheckSwitchState();
     }
 
     public override void ExitState()
     {
-        slideCheck = false;
         ctx.Collide -= FallState.instance.wallCollide;
     }
-    public void slideEnter()
-    {
-        slideCheck = true;
-    }
-
     public override void CheckSwitchState()
     {   //idle dash
 
@@ -77,7 +85,7 @@ public class FallState : BaseState
         if (hit.gameObject.CompareTag("wall"))
         {
             angle = Vector3.SignedAngle(hit.normal, hit.moveDirection,Vector3.up);
-            Debug.Log(angle);
+            //Debug.Log(angle);
             if (Mathf.Clamp(angle,-ctx._maxWallMovingAngle,ctx._maxWallMovingAngle) == angle)
             {
                 WallRunState wrss = (WallRunState)factory.WallRun();

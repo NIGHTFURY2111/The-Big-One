@@ -6,32 +6,42 @@ using System;
 public class JumpState : BaseState
 {
    public static JumpState instance;
-    private float speed;
-    private bool slideCheck = false;
+    float speed, actualSpeed;
     public JumpState(PlayerStateMachine ctx, StateFactory factory) : base(ctx, factory)
     {
         instance = this;
     }
-   
     public override void EnterState()
     {
-
-        speed = (slideCheck)? ctx._slideSpeed:ctx._walkingSpeed;
+        ctx.Collide += JumpState.instance.wallCollide;
+        speed = (ctx._magnitude.Equals(0f)) ? ctx._walkingSpeed: ctx._magnitude;
+        //speed = (slideCheck)? ctx._slideSpeed:ctx._walkingSpeed;
+        ctx._moveDirectionX = ctx._characterController.velocity.x;
+        ctx._moveDirectionZ = ctx._characterController.velocity.z;
         ctx._moveDirectionY = ctx._jumpSpeed;
+
     }
     public override void UpdateState()
     {
-        ctx._moveDirectionX = ctx.MovementVector().x * speed;
-        ctx._moveDirectionZ = ctx.MovementVector().z * speed;
+        ctx._moveDirectionX = ctx._characterController.velocity.x;
+        ctx._moveDirectionZ = ctx._characterController.velocity.z;
+        //Debug.Log(ctx.MovementVector() == Vector3.zero);
+        if (ctx.MovementVector() == Vector3.zero)
+        {
+            ctx._moveDirectionX -= ctx._characterController.velocity.normalized.x * Time.deltaTime;
+            ctx._moveDirectionZ -= ctx._characterController.velocity.normalized.z * Time.deltaTime;
+        }
+        else
+        {
+            ctx._moveDirectionX += ctx.MovementVector().x * ctx._forceAppliedInAir * Time.deltaTime;
+            ctx._moveDirectionZ += ctx.MovementVector().z * ctx._forceAppliedInAir * Time.deltaTime;
+        }
+
         CheckSwitchState();
     }
     public override void ExitState()
     {
-        slideCheck = false;
-    }
-    public void slideEnter()
-    {
-       slideCheck = true;
+        ctx.Collide -= JumpState.instance.wallCollide;
     }
 
     public override void CheckSwitchState()
@@ -62,5 +72,12 @@ public class JumpState : BaseState
         //}
 
     }
-
+    public void wallCollide(ControllerColliderHit hit)
+    {
+        if (hit.gameObject.CompareTag("wall") && ctx._jump.WasPressedThisFrame())
+        {
+            SwitchState(factory.WallJump());
+            return;
+        }
+    }
 }

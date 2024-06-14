@@ -6,7 +6,6 @@ using UnityEngine.InputSystem.HID;
 
 public class WallJumpState : BaseState
 {
-    Vector3 JumpVector;
     ControllerColliderHit hit;
     public static WallJumpState instance;
     //float timer = 0.5f;
@@ -18,37 +17,16 @@ public class WallJumpState : BaseState
 
     public override void EnterState()
     {
-        //JumpVector = ctx.MovementVector() * ctx._walkingSpeed;
-        //ctx._moveDirectionX = JumpVector.x;
-        //ctx._moveDirectionZ = JumpVector.y;
-        ctx._moveDirectionZ = hit.normal.z * ctx._walkingSpeed;
-        ctx._moveDirectionX = hit.normal.x * ctx._walkingSpeed;
+        ctx._moveDirectionZ = hit.normal.z * ctx._magnitude;
+        ctx._moveDirectionX = hit.normal.x * ctx._magnitude;
         
-
         ctx._moveDirectionY = ctx._jumpSpeed;
     }
-
-
-    //public override void UpdateState()
-    //{
-    //    //ctx._moveDirectionX = JumpVector.x;
-    //    //ctx._moveDirectionZ = JumpVector.y;s
-    //    CheckSwitchState();
-    //}
 
     public override void ExitState()
     {
         
     }
-
-    //public override void CheckSwitchState()
-    //{
-    //    if(ctx._characterController.isGrounded)
-    //    {
-    //        SwitchState(factory.Idle());
-    //        return;
-    //    } 
-    //}
     public void getCollider(ControllerColliderHit hit)
     {
         this.hit = hit;
@@ -56,8 +34,6 @@ public class WallJumpState : BaseState
 
     public override void UpdateState()
     {
-        //ctx._moveDirectionX = ctx.MovementVector().x * ctx._walkingSpeed;
-        //ctx._moveDirectionZ = ctx.MovementVector().z * ctx._walkingSpeed;
         CheckSwitchState();
     }
 
@@ -76,17 +52,11 @@ public class WallJumpState : BaseState
             SwitchState(factory.Fall());
             return;
         }
-        //idle (TODO)
+        //idle
         if (ctx._characterController.isGrounded)
         {
             SwitchState(factory.Idle());
             return;
         }
-        //if (ctx._collision.gameObject.CompareTag("wall"))
-        //{
-        //    SwitchState(factory.WallSlide());
-        //    return;
-        //}
-
     }
 }
