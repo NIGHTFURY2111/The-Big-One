@@ -43,6 +43,7 @@ public class PlayerStateMachine : MonoBehaviour
 
 
     public event Action<ControllerColliderHit> Collide;
+    public event Action<ControllerColliderHit> TempCollide;
     private float rotationX = 0;
     private Vector3 slidedir = Vector3.zero;
     private Vector3 moveDirection = Vector3.zero;
@@ -185,6 +186,8 @@ public class PlayerStateMachine : MonoBehaviour
         //Debug.Log(collision);
         //this.collision = hit;
         Collide?.Invoke(hit);
+        TempCollide?.Invoke(hit);
+
         
         
     }

@@ -38,13 +38,13 @@ public class WallRunState : BaseState
         ctx._gravity = gavity;
     }
 
-    //public void getCollider(ControllerColliderHit hit)
-    //{
-    //    this.hit = hit;
-    //}
+    public void getCollider(ControllerColliderHit hit)
+    {
+        this.hit = hit;
+    }
     //public void getangle()
     //{
-        
+
     //}
 
     public override void CheckSwitchState()
