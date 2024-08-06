@@ -371,7 +371,6 @@
 "Assets/script/stateMachine/WallJumpState.cs"
 "Assets/script/stateMachine/WallRunJumpState.cs"
 "Assets/script/stateMachine/WallRunState.cs"
-"Assets/script/stateMachine/WallRunState1.cs"
 "Assets/script/stateMachine/WallSlideState.cs"
 -langversion:9.0
 

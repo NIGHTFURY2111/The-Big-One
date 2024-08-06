@@ -1,6 +1,8 @@
 using System;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.PlayerLoop;
 using UnityEngine.UI;
 
 public class PlayerStateMachine : MonoBehaviour
@@ -9,6 +11,7 @@ public class PlayerStateMachine : MonoBehaviour
     BaseState currentState;
     public Text speed;
     public float slideNormalizingTime;
+    public float walkNormalizingTime;
     [Header("General Settings")]
     [SerializeField] float gravity;
     [SerializeField] float walkingSpeed;
@@ -44,7 +47,6 @@ public class PlayerStateMachine : MonoBehaviour
 
 
     public event Action<ControllerColliderHit> Collide;
-    public event Action<string> TEMPCollide;
     private float rotationX = 0;
     private Vector3 slidedir = Vector3.zero;
     private Vector3 moveDirection = Vector3.zero;
@@ -189,46 +191,53 @@ public class PlayerStateMachine : MonoBehaviour
 
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        //Debug.Log(collision);
-        //this.collision = hit;
+
+        //this.collision = hit
         Collide?.Invoke(hit);
-        TEMPCollide?.Invoke("hello");
     }
 
 
+    private void OnTriggerExit(Collider other)
+    {
+        Debug.Log(other.gameObject);
+        
+    }
+    
+
+
+
     #region getters and setters (DO NOT OPEN IF NOT NECESSARY, BRAINROT GURANTEED)
-    public float _gravity {  get {return gravity; }set { gravity = value; } }
-    public float _walkingSpeed { get { return walkingSpeed; } set { walkingSpeed = value; } }
-    public float _jumpSpeed { get { return jumpSpeed; } set { jumpSpeed = value; } }
-    public float _slideSpeed { get { return slideSpeed; } set { slideSpeed = value; } }
-    public float _wallSlideSpeed { get { return wallSlideSpeed; } set { wallSlideSpeed = value; } }
-    public float _dashSpeed { get { return dashSpeed; } set { dashSpeed = value; } }
-    public float _dashtime { get { return dashtime; } set { dashtime = value; } }
-    public float _lookSpeed { get { return lookSpeed; } set { lookSpeed= value; } }
-    public float _forceAppliedInAir { get { return forceAppliedInAir; } set { forceAppliedInAir = value; } }
+    public float _gravity {  get => gravity; set => gravity = value; }
+    public float _walkingSpeed { get => walkingSpeed; set => walkingSpeed = value; }
+    public float _jumpSpeed { get => jumpSpeed;  set => jumpSpeed = value; }
+    public float _slideSpeed { get => slideSpeed; set => slideSpeed = value; }
+    public float _wallSlideSpeed { get => wallSlideSpeed; set => wallSlideSpeed = value; }
+    public float _dashSpeed { get => dashSpeed; set => dashSpeed = value; }
+    public float _dashtime { get => dashtime; set => dashtime = value; }
+    public float _lookSpeed { get => lookSpeed; set => lookSpeed = value; }
+    public float _forceAppliedInAir { get => forceAppliedInAir; set => forceAppliedInAir = value; }
 
     //public Vector3 _moveDirection { get { return moveDirection; } set { moveDirection = value; } }
-    public float _moveDirectionX { get { return moveDirection.x; } set { moveDirection.x = value; } }
-    public float _moveDirectionY { get { return moveDirection.y; } set { moveDirection.y = value; } }
-    public float _moveDirectionZ { get { return moveDirection.z; } set { moveDirection.z = value; } }
-    public CharacterController _characterController { get { return characterController; } set { characterController = value; } }
-    public InputAction _move { get { return move; } set { move= value; } }
-    public InputAction _direction{get{return direction;} set{direction = value;}}
-    public InputAction _dash{get{return dash;} set{ dash= value;}}
-    public InputAction _jump{get{return jump;} set{ jump = value;}}
-    public InputAction _slide{get{return slide;} set{slide = value;}}
-    public BaseState _currentState { get { return currentState; } set { currentState = value; } }
-    public float _wallRunTime { get { return wallRunTime; } set { wallRunTime = value; } }
-    public float _wallRunDecay { get { return wallRunDecay; } set { wallRunDecay = value; } }
-    public float _maxWallMovingAngle{ get { return maxWallMovingAngle; } set { maxWallMovingAngle = value; } }
-    public float _minWallSlideSpeed { get { return minWallRunSpeed; } }
-    public float _minWallMovingAngle{get{return minWallMovingAngle;} set { minWallMovingAngle = value; } }
-    public float _maxWalllookingAngle{get{return maxWallLookingAngle;} set { maxWallLookingAngle = value; } }
+    public float _moveDirectionX { get => moveDirection.x; set => moveDirection.x = value; }
+    public float _moveDirectionY { get => moveDirection.y; set => moveDirection.y = value; }
+    public float _moveDirectionZ { get => moveDirection.z; set => moveDirection.z = value; }
+    public CharacterController _characterController { get => characterController; set => characterController = value; }
+    public InputAction _move { get => move; set => move = value; }
+    public InputAction _direction{get=> direction; set => direction = value;}
+    public InputAction _dash{get=> dash; set => dash = value;}
+    public InputAction _jump{get=> jump; set => jump = value;}
+    public InputAction _slide{get=> slide; set => slide = value;}
+    public BaseState _currentState { get => currentState; set => currentState = value; }
+    public float _wallRunTime { get => wallRunTime; set => wallRunTime = value; }
+    public float _wallRunDecay { get => wallRunDecay; set => wallRunDecay = value; }
+    public float _maxWallMovingAngle{ get => maxWallMovingAngle; set => maxWallMovingAngle = value; }
+    public float _minWallMovingAngle{get=> minWallMovingAngle; set => minWallMovingAngle = value; }
+    public float _maxWalllookingAngle{get=> maxWallLookingAngle; set => maxWallLookingAngle = value; }
 
-    public float _minWalllookingAngle{get{return minWallLookingAngle;} set { minWallLookingAngle = value; } }
-    public float _magnitude { get { return characterController.velocity.magnitude; } }     //this is to return the current velocity of the player
-
-    public float _slideNormalizingTime { get { return slideNormalizingTime; } }
+    public float _minWalllookingAngle{get=> minWallLookingAngle; set => minWallLookingAngle = value; }
+    public float _minWallSlideSpeed { get => minWallRunSpeed; }
+    public float _magnitude { get => characterController.velocity.magnitude; }     //this is to return the current velocity of the player
+    public float _slideNormalizingTime { get => slideNormalizingTime; }
 
     //public ControllerColliderHit _collision { get { return collision; } set {  collision = value; } }
     #endregion

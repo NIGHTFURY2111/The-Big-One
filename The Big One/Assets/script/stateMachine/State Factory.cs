@@ -69,7 +69,6 @@ public class StateFactory
         wallRunState = new WallRunState(_context,this);
         wallRunJumpState = new WallRunJumpState(_context,this);
 
-        _context.Collide += WallJumpState.instance.getCollider;
         //_context.Collide += WallRunState.instance.getCollider;
         //_context.Collide += WallRunState.instance.getCollider;
         // ctx.Collide += FallState.instance.wallCollide;(un/subscribed in fallstate)

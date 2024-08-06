@@ -12,6 +12,7 @@ public class IdleState : BaseState
 
     public override void EnterState()
     {
+
         ctx._moveDirectionX = 0f;
         ctx._moveDirectionY = -2f;
         ctx._moveDirectionZ = 0f;

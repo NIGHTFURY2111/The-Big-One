@@ -12,6 +12,7 @@ public class WallJumpState : BaseState
     public WallJumpState(PlayerStateMachine ctx, StateFactory factory) : base(ctx, factory)
     {
         instance = this;
+        ctx.Collide += WallJumpState.instance.getCollider;
     }
 
 
@@ -25,6 +26,7 @@ public class WallJumpState : BaseState
 
     public override void ExitState()
     {
+        //ctx.Collide -= WallJumpState.instance.getCollider;
         
     }
     public void getCollider(ControllerColliderHit hit)

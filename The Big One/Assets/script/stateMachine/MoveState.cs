@@ -5,7 +5,10 @@ using UnityEngine.EventSystems;
 
 public class MoveState : BaseState
 {
-   
+    float speed;
+    float elapsedTime;
+    float percent;
+
     public MoveState(PlayerStateMachine ctx, StateFactory factory) : base(ctx, factory)
     {
     }
