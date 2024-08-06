@@ -1,9 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.InputSystem.HID;
-
+using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 public class WallJumpState : BaseState
 {
     Vector3 JumpVector;
@@ -60,7 +60,18 @@ public class WallJumpState : BaseState
         //ctx._moveDirectionZ = ctx.MovementVector().z * ctx._walkingSpeed;
         CheckSwitchState();
     }
-
+    private void OnActionCanceled(InputAction.CallbackContext context)
+    {
+        SwitchState(factory.GrappleStart());
+        GrappleStart.instance.held = false;
+        return;
+    }
+    private void OnActionPerformed(InputAction.CallbackContext context)
+    {
+        SwitchState(factory.GrappleStart());
+        GrappleStart.instance.held = true;
+        return;
+    }
     public override void CheckSwitchState()
     {   //dash fall idle
 
@@ -87,6 +98,7 @@ public class WallJumpState : BaseState
         //    SwitchState(factory.WallSlide());
         //    return;
         //}
-
+        ctx._grapple.started += OnActionCanceled;
+        ctx._grapple.performed += OnActionPerformed;
     }
 }

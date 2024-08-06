@@ -35,7 +35,10 @@ public class PlayerStateMachine : MonoBehaviour
     [SerializeField] Camera playerCamera;
     [SerializeField] float lookXLimit;
 
-
+    [Header("Grapple Settings")]
+    [SerializeField] GameObject debugGrapplePoint;
+    [SerializeField] LineRenderer lineRenderer;
+ 
     [HideInInspector]
     [SerializeField] CharacterController characterController;
 
@@ -52,7 +55,10 @@ public class PlayerStateMachine : MonoBehaviour
     private InputAction dash;
     private InputAction jump;
     private InputAction slide;
+    private InputAction grapple;
+    private InputAction grappleHold;
     private ControllerColliderHit collision;
+
     
 
     //private PlayerState PlayerState;
@@ -63,7 +69,7 @@ public class PlayerStateMachine : MonoBehaviour
     {
         stateFactory = new StateFactory(this);
         characterController = GetComponent<CharacterController>();
-
+        
         control = new();
 
         move = control.player.movement;
@@ -71,6 +77,8 @@ public class PlayerStateMachine : MonoBehaviour
         jump = control.player.jump;
         slide = control.player.slide;
         direction = control.player.camera;
+        grapple = control.player.Grapple;
+        grappleHold = control.player.GrappleHold;   
 
     }
 
@@ -81,7 +89,8 @@ public class PlayerStateMachine : MonoBehaviour
         jump.Enable();
         slide.Enable();
         direction.Enable();
-
+        grapple.Enable();
+        grappleHold.Enable();
     }
 
     private void OnDisable()
@@ -91,11 +100,14 @@ public class PlayerStateMachine : MonoBehaviour
         jump.Disable();
         slide.Disable();
         direction.Disable();
+        grapple.Disable();
+        grappleHold.Disable();
     }
     #endregion
 
     void Start()
     {
+        InputSystem.settings.SetInternalFeatureFlag("DISABLE_SHORTCUT_SUPPORT", true);
         currentState = stateFactory.Idle();
         currentState.EnterState();
         lookSpeed *= 0.5f;
@@ -121,6 +133,11 @@ public class PlayerStateMachine : MonoBehaviour
 
         // Player and Camera rotation
         cameraMovement();
+    }
+
+    private void LateUpdate()
+    {
+        currentState.LateUpdateState();
     }
 
     public void cameraMovement()
@@ -198,8 +215,7 @@ public class PlayerStateMachine : MonoBehaviour
     public float _dashSpeed { get { return dashSpeed; } set { dashSpeed = value; } }
     public float _dashtime { get { return dashtime; } set { dashtime = value; } }
     public float _lookSpeed { get { return lookSpeed; } set { lookSpeed= value; } }
-
-    //public Vector3 _moveDirection { get { return moveDirection; } set { moveDirection = value; } }
+    public Vector3 _moveDirection { get { return moveDirection; } set { moveDirection = value; } }
     public float _moveDirectionX { get { return moveDirection.x; } set { moveDirection.x = value; } }
     public float _moveDirectionY { get { return moveDirection.y; } set { moveDirection.y = value; } }
     public float _moveDirectionZ { get { return moveDirection.z; } set { moveDirection.z = value; } }
@@ -209,6 +225,8 @@ public class PlayerStateMachine : MonoBehaviour
     public InputAction _dash{get{return dash;} set{ dash= value;}}
     public InputAction _jump{get{return jump;} set{ jump = value;}}
     public InputAction _slide{get{return slide;} set{slide = value;}}
+    public InputAction _grapple { get { return grapple; } set { grapple = value; } }
+    public InputAction _grappleHold { get { return grappleHold; } set { grappleHold = value; } }    
     public BaseState _currentState { get { return currentState; } set { currentState = value; } }
     public float _wallRunTime { get { return wallRunTime; } set { wallRunTime = value; } }
     public float _wallRunDecay { get { return wallRunDecay; } set { wallRunDecay = value; } }
@@ -216,6 +234,9 @@ public class PlayerStateMachine : MonoBehaviour
     public float _minWallMovingAngle{get{return minWallMovingAngle;} set { minWallMovingAngle = value; } }
     public float _maxWalllookingAngle{get{return maxWallLookingAngle;} set { maxWallLookingAngle = value; } }
     public float _minWalllookingAngle{get{return minWallLookingAngle;} set { minWallLookingAngle = value; } }
+    public Camera _playerCamera { get { return playerCamera; } set { playerCamera = value; } }
+    public GameObject _debugGrapplePoint { get { return debugGrapplePoint; } set { debugGrapplePoint = value; } }
+    public LineRenderer _lineRenderer { get { return lineRenderer; } set { lineRenderer = value; } }
     //public ControllerColliderHit _collision { get { return collision; } set {  collision = value; } }
 
     #endregion

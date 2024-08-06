@@ -54,6 +54,9 @@ public class StateFactory
     WallSlideState wallSlideState;
     WallJumpState wallJumpState;
     WallRunState wallRunState;
+    GrappleStart grappleStart;
+    GrapplePull grapplePull;
+    GrappleSwing grappleSwing;
     public StateFactory(PlayerStateMachine currentContext)
     {
         _context = currentContext;
@@ -66,6 +69,9 @@ public class StateFactory
         wallJumpState = new WallJumpState(_context,this);
         wallSlideState = new WallSlideState(_context,this);
         wallRunState = new WallRunState(_context,this);
+        grappleStart = new GrappleStart(_context,this);
+        grapplePull = new GrapplePull(_context,this);
+        grappleSwing = new GrappleSwing(_context,this); 
 
         SlideState.Instance.slideExit += JumpState.instance.slideEnter;
         SlideState.Instance.slideExit += FallState.instance.slideEnter;
@@ -124,6 +130,18 @@ public class StateFactory
     {
         return wallRunState;
     }
+    public BaseState GrappleStart()
+    {
+        return grappleStart;
+    }
+    public BaseState GrapllePull()
+    {
+        return grapplePull;
+    }
 
+    public BaseState GrappleSwing()
+    {
+        return grappleSwing;
+    }
     //DO THE SAME FOR ALL CLASSES
 }

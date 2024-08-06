@@ -2,10 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
+
 
 public class JumpState : BaseState
 {
-   public static JumpState instance;
+    public static JumpState instance;
     private float speed;
     private bool slideCheck = false;
     public JumpState(PlayerStateMachine ctx, StateFactory factory) : base(ctx, factory)
@@ -32,6 +35,19 @@ public class JumpState : BaseState
     public void slideEnter()
     {
        slideCheck = true;
+    }
+
+    private void OnActionCanceled(InputAction.CallbackContext context)
+    {
+        SwitchState(factory.GrappleStart());
+        GrappleStart.instance.held = false;
+        return;
+    }
+    private void OnActionPerformed(InputAction.CallbackContext context)
+    {
+        SwitchState(factory.GrappleStart());
+        GrappleStart.instance.held = true;
+        return;
     }
 
     public override void CheckSwitchState()
@@ -61,6 +77,15 @@ public class JumpState : BaseState
         //    return;
         //}
 
+        //if (ctx._grapple.WasPerformedThisFrame())
+        //{
+        //    SwitchState(factory.GrappleStart());
+        //    return;
+        //}
+
+
+        ctx._grapple.canceled += OnActionCanceled;
+        ctx._grapple.performed += OnActionPerformed;
     }
 
 }

@@ -12,6 +12,7 @@ public abstract class BaseState
     public abstract void UpdateState();
     public abstract void ExitState();
     public abstract void CheckSwitchState();
+    public virtual void LateUpdateState() { }
    
     protected void SwitchState(BaseState next) 
     {
