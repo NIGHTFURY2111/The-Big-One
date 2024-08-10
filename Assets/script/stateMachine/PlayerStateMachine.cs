@@ -39,6 +39,10 @@ public class PlayerStateMachine : MonoBehaviour
     [SerializeField] Camera playerCamera;
     [SerializeField] float lookXLimit;
 
+    [Header("Grapple Settings")]
+    [SerializeField] GameObject debugGrapplePoint;
+    [SerializeField] LineRenderer lineRenderer;
+
 
     [HideInInspector]
     [SerializeField] CharacterController characterController;
@@ -56,6 +60,8 @@ public class PlayerStateMachine : MonoBehaviour
     private InputAction dash;
     private InputAction jump;
     private InputAction slide;
+    private InputAction grapple;
+    private InputAction grappleHold;
     private ControllerColliderHit collision;
     
 
@@ -75,6 +81,8 @@ public class PlayerStateMachine : MonoBehaviour
         jump = control.player.jump;
         slide = control.player.slide;
         direction = control.player.camera;
+        grapple = control.player.Grapple;
+        grappleHold = control.player.GrappleHold;
 
     }
 
@@ -85,7 +93,8 @@ public class PlayerStateMachine : MonoBehaviour
         jump.Enable();
         slide.Enable();
         direction.Enable();
-
+        grapple.Enable();
+        grappleHold.Enable();
     }
 
     private void OnDisable()
@@ -95,11 +104,14 @@ public class PlayerStateMachine : MonoBehaviour
         jump.Disable();
         slide.Disable();
         direction.Disable();
+        grapple.Disable();
+        grappleHold.Disable();
     }
     #endregion
 
     void Start()
     {
+        InputSystem.settings.SetInternalFeatureFlag("DISABLE_SHORTCUT_SUPPORT", true);
         currentState = stateFactory.Idle();
         currentState.EnterState();
         lookSpeed *= 0.5f;
@@ -130,6 +142,11 @@ public class PlayerStateMachine : MonoBehaviour
 
         // Player and Camera rotation
         cameraMovement();
+    }
+
+    private void LateUpdate()
+    {
+        currentState.LateUpdateState();
     }
 
     public void cameraMovement()
@@ -202,7 +219,6 @@ public class PlayerStateMachine : MonoBehaviour
         Debug.Log(other.gameObject);
         
     }
-    
 
 
 
@@ -217,7 +233,7 @@ public class PlayerStateMachine : MonoBehaviour
     public float _lookSpeed { get => lookSpeed; set => lookSpeed = value; }
     public float _forceAppliedInAir { get => forceAppliedInAir; set => forceAppliedInAir = value; }
 
-    //public Vector3 _moveDirection { get { return moveDirection; } set { moveDirection = value; } }
+    public Vector3 _moveDirection { get { return moveDirection; } set { moveDirection = value; } }
     public float _moveDirectionX { get => moveDirection.x; set => moveDirection.x = value; }
     public float _moveDirectionY { get => moveDirection.y; set => moveDirection.y = value; }
     public float _moveDirectionZ { get => moveDirection.z; set => moveDirection.z = value; }
@@ -238,6 +254,11 @@ public class PlayerStateMachine : MonoBehaviour
     public float _minWallSlideSpeed { get => minWallRunSpeed; }
     public float _magnitude { get => characterController.velocity.magnitude; }     //this is to return the current velocity of the player
     public float _slideNormalizingTime { get => slideNormalizingTime; }
+    public Camera _playerCamera { get { return playerCamera; } set { playerCamera = value; } }
+    public GameObject _debugGrapplePoint { get { return debugGrapplePoint; } set { debugGrapplePoint = value; } }
+    public LineRenderer _lineRenderer { get { return lineRenderer; } set { lineRenderer = value; } }
+    public InputAction _grapple { get { return grapple; } set { grapple = value; } }
+    public InputAction _grappleHold { get { return grappleHold; } set { grappleHold = value; } }
 
     //public ControllerColliderHit _collision { get { return collision; } set {  collision = value; } }
     #endregion

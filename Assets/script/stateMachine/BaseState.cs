@@ -1,9 +1,9 @@
 
-public abstract class BaseState 
+public abstract class BaseState
 {
     protected PlayerStateMachine ctx;
     protected StateFactory factory;
-    public BaseState(PlayerStateMachine ctx,StateFactory factory)
+    public BaseState(PlayerStateMachine ctx, StateFactory factory)
     {
         this.ctx = ctx;
         this.factory = factory;
@@ -12,8 +12,9 @@ public abstract class BaseState
     public abstract void UpdateState();
     public abstract void ExitState();
     public abstract void CheckSwitchState();
-   
-    protected void SwitchState(BaseState next) 
+    public virtual void LateUpdateState() { }
+
+    protected void SwitchState(BaseState next)
     {
         ctx._currentState.ExitState();
         ctx._currentState = next;

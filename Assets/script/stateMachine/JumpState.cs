@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 
 public class JumpState : BaseState
 {
@@ -44,6 +46,19 @@ public class JumpState : BaseState
         ctx.Collide -= JumpState.instance.wallCollide;
     }
 
+    private void OnActionCanceled(InputAction.CallbackContext context)
+    {
+        SwitchState(factory.GrappleStart());
+        GrappleStart.instance.held = false;
+        return;
+    }
+    private void OnActionPerformed(InputAction.CallbackContext context)
+    {
+        SwitchState(factory.GrappleStart());
+        GrappleStart.instance.held = true;
+        return;
+    }
+
     public override void CheckSwitchState()
     {   //dash fall idle
 
@@ -70,7 +85,8 @@ public class JumpState : BaseState
         //    SwitchState(factory.WallSlide());
         //    return;
         //}
-
+        ctx._grapple.canceled += OnActionCanceled;
+        ctx._grapple.performed += OnActionPerformed;
     }
     public void wallCollide(ControllerColliderHit hit)
     {

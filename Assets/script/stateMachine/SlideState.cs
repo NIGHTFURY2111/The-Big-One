@@ -2,6 +2,10 @@ using UnityEngine;
 using System;
 using Unity.VisualScripting;
 using UnityEngine.Windows;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 
 public class SlideState : BaseState
 {
@@ -48,6 +52,18 @@ public class SlideState : BaseState
         //ctx.transform.localScale = new Vector3(1, 1, 1);
     }
 
+    private void OnActionCanceled(InputAction.CallbackContext context)
+    {
+        SwitchState(factory.GrappleStart());
+        GrappleStart.instance.held = false;
+        return;
+    }
+    private void OnActionPerformed(InputAction.CallbackContext context)
+    {
+        SwitchState(factory.GrappleStart());
+        GrappleStart.instance.held = true;
+        return;
+    }
 
     public override void CheckSwitchState()
     {   //jump fall idle dash
@@ -77,5 +93,8 @@ public class SlideState : BaseState
             SwitchState(factory.Idle());
             return;
         }
+
+        ctx._grapple.started += OnActionCanceled;
+        ctx._grapple.performed += OnActionPerformed;
     }
 }

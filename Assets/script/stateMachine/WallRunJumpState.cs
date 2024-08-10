@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.HID;
 
 public class WallRunJumpState : BaseState
@@ -38,7 +39,18 @@ public class WallRunJumpState : BaseState
     }
 
     //public void getCollider(ControllerColliderHit hit) {   this.hit = hit;    }
-
+    private void OnActionCanceled(InputAction.CallbackContext context)
+    {
+        SwitchState(factory.GrappleStart());
+        GrappleStart.instance.held = false;
+        return;
+    }
+    private void OnActionPerformed(InputAction.CallbackContext context)
+    {
+        SwitchState(factory.GrappleStart());
+        GrappleStart.instance.held = true;
+        return;
+    }
 
     public override void CheckSwitchState()
     {   //dash fall idle
@@ -61,6 +73,7 @@ public class WallRunJumpState : BaseState
             SwitchState(factory.Idle());
             return;
         }
-
+        ctx._grapple.started += OnActionCanceled;
+        ctx._grapple.performed += OnActionPerformed;
     }
 }

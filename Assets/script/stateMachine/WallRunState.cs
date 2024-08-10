@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class WallRunState : BaseState
 {
@@ -44,6 +45,19 @@ public class WallRunState : BaseState
         this.hit = hit;
     }
 
+    private void OnActionCanceled(InputAction.CallbackContext context)
+    {
+        SwitchState(factory.GrappleStart());
+        GrappleStart.instance.held = false;
+        return;
+    }
+    private void OnActionPerformed(InputAction.CallbackContext context)
+    {
+        SwitchState(factory.GrappleStart());
+        GrappleStart.instance.held = true;
+        return;
+    }
+
     public override void CheckSwitchState()
     {
         if (ctx._characterController.isGrounded )
@@ -59,6 +73,8 @@ public class WallRunState : BaseState
             SwitchState(factory.WallRunJumpState());
             return;
         }
+        ctx._grapple.started += OnActionCanceled;
+        ctx._grapple.performed += OnActionPerformed;
     }
 
     #region getter setter

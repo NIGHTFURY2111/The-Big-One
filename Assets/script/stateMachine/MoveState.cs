@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 
 public class MoveState : BaseState
 {
@@ -25,7 +26,18 @@ public class MoveState : BaseState
     public override void ExitState()
     {
     }
-
+    private void OnActionCanceled(InputAction.CallbackContext context)
+    {
+        SwitchState(factory.GrappleStart());
+        GrappleStart.instance.held = false;
+        return;
+    }
+    private void OnActionPerformed(InputAction.CallbackContext context)
+    {
+        SwitchState(factory.GrappleStart());
+        GrappleStart.instance.held = true;
+        return;
+    }
     public override void CheckSwitchState()
     {   //idle dash jump  slide fall
         
@@ -62,6 +74,7 @@ public class MoveState : BaseState
             SwitchState(factory.Slide());
             return;
         }
-
+        ctx._grapple.started += OnActionCanceled;
+        ctx._grapple.performed += OnActionPerformed;
     }
 }

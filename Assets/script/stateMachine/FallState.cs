@@ -3,7 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
-
+using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 public class FallState : BaseState
 {
     public static FallState instance;
@@ -54,6 +55,20 @@ public class FallState : BaseState
     {
         ctx.Collide -= FallState.instance.wallCollide;
     }
+
+    private void OnActionCanceled(InputAction.CallbackContext context)
+    {
+        SwitchState(factory.GrappleStart());
+        GrappleStart.instance.held = false;
+        return;
+    }
+    private void OnActionPerformed(InputAction.CallbackContext context)
+    {
+        SwitchState(factory.GrappleStart());
+        GrappleStart.instance.held = true;
+        return;
+    }
+
     public override void CheckSwitchState()
     {   //idle dash
 
@@ -76,8 +91,8 @@ public class FallState : BaseState
             return;
         }
 
-
-        
+        ctx._grapple.started += OnActionCanceled;
+        ctx._grapple.performed += OnActionPerformed;
 
     }
     public void wallCollide(ControllerColliderHit hit)
@@ -94,14 +109,15 @@ public class FallState : BaseState
                 SwitchState(factory.WallRun());
                 return;
             }
-           
+
             SwitchState(factory.WallSlide());
 
-            
+
             return;
 
         }
     
 
     }
+    
 }
