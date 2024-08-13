@@ -1,0 +1,175 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\Github\\projecter\\The-Big-One\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{EB5792DC-2202-4EEF-20D5-8604009BC7A7}|Assembly-CSharp.csproj|D:\\Github\\projecter\\The-Big-One\\assets\\script\\statemachine\\jumpstate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EB5792DC-2202-4EEF-20D5-8604009BC7A7}|Assembly-CSharp.csproj|solutionrelative:assets\\script\\statemachine\\jumpstate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EB5792DC-2202-4EEF-20D5-8604009BC7A7}|Assembly-CSharp.csproj|D:\\Github\\projecter\\The-Big-One\\assets\\script\\customcharactercontroller\\playercharactercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EB5792DC-2202-4EEF-20D5-8604009BC7A7}|Assembly-CSharp.csproj|solutionrelative:assets\\script\\customcharactercontroller\\playercharactercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EB5792DC-2202-4EEF-20D5-8604009BC7A7}|Assembly-CSharp.csproj|D:\\Github\\projecter\\The-Big-One\\assets\\script\\statemachine\\fallstate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EB5792DC-2202-4EEF-20D5-8604009BC7A7}|Assembly-CSharp.csproj|solutionrelative:assets\\script\\statemachine\\fallstate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EB5792DC-2202-4EEF-20D5-8604009BC7A7}|Assembly-CSharp.csproj|D:\\Github\\projecter\\The-Big-One\\assets\\script\\statemachine\\playerstatemachine.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EB5792DC-2202-4EEF-20D5-8604009BC7A7}|Assembly-CSharp.csproj|solutionrelative:assets\\script\\statemachine\\playerstatemachine.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EB5792DC-2202-4EEF-20D5-8604009BC7A7}|Assembly-CSharp.csproj|D:\\Github\\projecter\\The-Big-One\\assets\\script\\statemachine\\movestate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EB5792DC-2202-4EEF-20D5-8604009BC7A7}|Assembly-CSharp.csproj|solutionrelative:assets\\script\\statemachine\\movestate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EB5792DC-2202-4EEF-20D5-8604009BC7A7}|Assembly-CSharp.csproj|D:\\Github\\projecter\\The-Big-One\\assets\\script\\statemachine\\state factory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EB5792DC-2202-4EEF-20D5-8604009BC7A7}|Assembly-CSharp.csproj|solutionrelative:assets\\script\\statemachine\\state factory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EB5792DC-2202-4EEF-20D5-8604009BC7A7}|Assembly-CSharp.csproj|d:\\github\\projecter\\the-big-one\\assets\\script\\statemachine\\basestate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EB5792DC-2202-4EEF-20D5-8604009BC7A7}|Assembly-CSharp.csproj|solutionrelative:assets\\script\\statemachine\\basestate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EB5792DC-2202-4EEF-20D5-8604009BC7A7}|Assembly-CSharp.csproj|D:\\Github\\projecter\\The-Big-One\\assets\\script\\statemachine\\dashstate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EB5792DC-2202-4EEF-20D5-8604009BC7A7}|Assembly-CSharp.csproj|solutionrelative:assets\\script\\statemachine\\dashstate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EB5792DC-2202-4EEF-20D5-8604009BC7A7}|Assembly-CSharp.csproj|D:\\Github\\projecter\\The-Big-One\\assets\\script\\statemachine\\idlestate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EB5792DC-2202-4EEF-20D5-8604009BC7A7}|Assembly-CSharp.csproj|solutionrelative:assets\\script\\statemachine\\idlestate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 4,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "PlayerStateMachine.cs",
+              "DocumentMoniker": "D:\\Github\\projecter\\The-Big-One\\Assets\\script\\stateMachine\\PlayerStateMachine.cs",
+              "RelativeDocumentMoniker": "Assets\\script\\stateMachine\\PlayerStateMachine.cs",
+              "ToolTip": "D:\\Github\\projecter\\The-Big-One\\Assets\\script\\stateMachine\\PlayerStateMachine.cs",
+              "RelativeToolTip": "Assets\\script\\stateMachine\\PlayerStateMachine.cs",
+              "ViewState": "AQIAAIwAAAAAAAAAAADgv5wAAAAKAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-10T13:02:29.116Z",
+              "IsPinned": true,
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "PlayerCharacterController.cs",
+              "DocumentMoniker": "D:\\Github\\projecter\\The-Big-One\\Assets\\script\\CustomCharacterController\\PlayerCharacterController.cs",
+              "RelativeDocumentMoniker": "Assets\\script\\CustomCharacterController\\PlayerCharacterController.cs",
+              "ToolTip": "D:\\Github\\projecter\\The-Big-One\\Assets\\script\\CustomCharacterController\\PlayerCharacterController.cs",
+              "RelativeToolTip": "Assets\\script\\CustomCharacterController\\PlayerCharacterController.cs",
+              "ViewState": "AQIAADoAAAAAAAAAAAAMwEkAAAAFAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-10T13:54:19.832Z",
+              "IsPinned": true,
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "BaseState.cs",
+              "DocumentMoniker": "D:\\Github\\projecter\\The-Big-One\\Assets\\script\\stateMachine\\BaseState.cs",
+              "RelativeDocumentMoniker": "Assets\\script\\stateMachine\\BaseState.cs",
+              "ToolTip": "D:\\Github\\projecter\\The-Big-One\\Assets\\script\\stateMachine\\BaseState.cs",
+              "RelativeToolTip": "Assets\\script\\stateMachine\\BaseState.cs",
+              "ViewState": "AQIAAAIAAAAAAAAAAAAAwAsAAAAlAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-12T19:31:32.139Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "State Factory.cs",
+              "DocumentMoniker": "D:\\Github\\projecter\\The-Big-One\\Assets\\script\\stateMachine\\State Factory.cs",
+              "RelativeDocumentMoniker": "Assets\\script\\stateMachine\\State Factory.cs",
+              "ToolTip": "D:\\Github\\projecter\\The-Big-One\\Assets\\script\\stateMachine\\State Factory.cs",
+              "RelativeToolTip": "Assets\\script\\stateMachine\\State Factory.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAuwCYAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-12T13:36:33.323Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "JumpState.cs",
+              "DocumentMoniker": "D:\\Github\\projecter\\The-Big-One\\Assets\\script\\stateMachine\\JumpState.cs",
+              "RelativeDocumentMoniker": "Assets\\script\\stateMachine\\JumpState.cs",
+              "ToolTip": "D:\\Github\\projecter\\The-Big-One\\Assets\\script\\stateMachine\\JumpState.cs",
+              "RelativeToolTip": "Assets\\script\\stateMachine\\JumpState.cs",
+              "ViewState": "AQIAABUAAAAAAAAAAAAYwCgAAAA4AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-10T20:16:27.647Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "FallState.cs",
+              "DocumentMoniker": "D:\\Github\\projecter\\The-Big-One\\Assets\\script\\stateMachine\\FallState.cs",
+              "RelativeDocumentMoniker": "Assets\\script\\stateMachine\\FallState.cs",
+              "ToolTip": "D:\\Github\\projecter\\The-Big-One\\Assets\\script\\stateMachine\\FallState.cs",
+              "RelativeToolTip": "Assets\\script\\stateMachine\\FallState.cs",
+              "ViewState": "AQIAABMAAAAAAAAAAAAQwCYAAAAYAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-10T20:12:15.211Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "MoveState.cs",
+              "DocumentMoniker": "D:\\Github\\projecter\\The-Big-One\\Assets\\script\\stateMachine\\MoveState.cs",
+              "RelativeDocumentMoniker": "Assets\\script\\stateMachine\\MoveState.cs",
+              "ToolTip": "D:\\Github\\projecter\\The-Big-One\\Assets\\script\\stateMachine\\MoveState.cs",
+              "RelativeToolTip": "Assets\\script\\stateMachine\\MoveState.cs",
+              "ViewState": "AQIAAA0AAAAAAAAAAAAQwB4AAAA4AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-10T14:22:36.784Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "DashState.cs",
+              "DocumentMoniker": "D:\\Github\\projecter\\The-Big-One\\Assets\\script\\stateMachine\\DashState.cs",
+              "RelativeDocumentMoniker": "Assets\\script\\stateMachine\\DashState.cs",
+              "ToolTip": "D:\\Github\\projecter\\The-Big-One\\Assets\\script\\stateMachine\\DashState.cs",
+              "RelativeToolTip": "Assets\\script\\stateMachine\\DashState.cs",
+              "ViewState": "AQIAABAAAAAAAAAAAAAQwBsAAAA4AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-11T07:45:40.513Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "IdleState.cs",
+              "DocumentMoniker": "D:\\Github\\projecter\\The-Big-One\\Assets\\script\\stateMachine\\IdleState.cs",
+              "RelativeDocumentMoniker": "Assets\\script\\stateMachine\\IdleState.cs",
+              "ToolTip": "D:\\Github\\projecter\\The-Big-One\\Assets\\script\\stateMachine\\IdleState.cs",
+              "RelativeToolTip": "Assets\\script\\stateMachine\\IdleState.cs",
+              "ViewState": "AQIAABIAAAAAAAAAAAAYwEIAAAAoAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-11T09:02:30Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
