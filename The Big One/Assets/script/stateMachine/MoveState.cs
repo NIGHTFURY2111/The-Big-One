@@ -12,11 +12,24 @@ public class MoveState : BaseState
 
     public override void EnterState()
     {
+        ctx._TGTSpeed = ctx._walkingSpeed;
+        ctx._getPCC.setmaxlinvel(ctx._walkingSpeed);
+        ctx._getPCC._drag = 10;     
+
+    }
+
+    public override void FixedState()
+    {
+        ctx._moveDirectionX = ctx.MovementVector().x;
+        ctx._moveDirectionZ = ctx.MovementVector().z;
+
+
+        ctx._getPCC.calculateAccelration(ctx._TGTSpeed);
+        ctx._getPCC.move();
+
     }
     public override void UpdateState()
     {
-        ctx._moveDirectionX = ctx.MovementVector().x * ctx._walkingSpeed;
-        ctx._moveDirectionZ = ctx.MovementVector().z * ctx._walkingSpeed;
         CheckSwitchState();
     }
     public override void ExitState()
@@ -38,7 +51,7 @@ public class MoveState : BaseState
     {   //idle dash jump  slide fall
         
         //Fall
-        if (!ctx._characterController.isGrounded)
+        if (!ctx._getPCC.isGrounded()) //ctx._characterController.isGrounded
         {
             SwitchState(factory.Fall());
             return;

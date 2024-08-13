@@ -65,8 +65,13 @@ public class JumpState : BaseState
             SwitchState(factory.Fall());
             return;
         }
+<<<<<<<< Updated upstream:The Big One/Assets/script/stateMachine/JumpState.cs
         //idle (TODO)
         if (ctx._characterController.isGrounded)
+========
+        //idle
+        if (ctx._getPCC.isGrounded())
+>>>>>>>> Stashed changes:Assets/script/stateMachine/WallRunJumpState.cs
         {
             SwitchState(factory.Idle());
             return;

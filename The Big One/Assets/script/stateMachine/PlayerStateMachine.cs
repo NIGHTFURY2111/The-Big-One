@@ -9,12 +9,25 @@ public class PlayerStateMachine : MonoBehaviour
 {
     StateFactory stateFactory;
     BaseState currentState;
+<<<<<<<< Updated upstream:The Big One/Assets/script/stateMachine/PlayerStateMachine.cs
+========
+    public Text speed;
+    public float slideNormalizingTime;
+    public float walkNormalizingTime;
+>>>>>>>> Stashed changes:Assets/script/stateMachine/PlayerStateMachine.cs
 
     [Header("General Settings")]
     [SerializeField] float gravity;
+    [SerializeField] float maxGravity;
     [SerializeField] float walkingSpeed;
     [SerializeField] float jumpSpeed;
+    [SerializeField] float jumptime;
     [SerializeField] float slideSpeed;
+<<<<<<<< Updated upstream:The Big One/Assets/script/stateMachine/PlayerStateMachine.cs
+========
+    [SerializeField] float forceAppliedInAir;
+    [SerializeField] LayerMask Ground;
+>>>>>>>> Stashed changes:Assets/script/stateMachine/PlayerStateMachine.cs
 
 
     [Header("Dash Settings")]
@@ -41,6 +54,12 @@ public class PlayerStateMachine : MonoBehaviour
  
     [HideInInspector]
     [SerializeField] CharacterController characterController;
+    PlayerCharacterController PCC;
+    Rigidbody rb;
+    Collider col;
+
+    float tgtSpeed;
+
 
 
 
@@ -69,7 +88,18 @@ public class PlayerStateMachine : MonoBehaviour
     {
         stateFactory = new StateFactory(this);
         characterController = GetComponent<CharacterController>();
+<<<<<<<< Updated upstream:The Big One/Assets/script/stateMachine/PlayerStateMachine.cs
         
+========
+
+        rb = GetComponent<Rigidbody>();
+        col = GetComponent<CapsuleCollider>();
+        PCC = new PlayerCharacterController(rb, col);
+        PCC._setGroundLayer(Ground);
+        
+
+
+>>>>>>>> Stashed changes:Assets/script/stateMachine/PlayerStateMachine.cs
         control = new();
 
         move = control.player.movement;
@@ -112,6 +142,8 @@ public class PlayerStateMachine : MonoBehaviour
         currentState.EnterState();
         lookSpeed *= 0.5f;
 
+        PCC._gravity = gravity;
+
         // Lock cursor
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -120,19 +152,35 @@ public class PlayerStateMachine : MonoBehaviour
 
     void Update()
     {
-        //Debug.Log(currentState + " " + moveDirection);
-        //moving the player
-        //PlayerMovement();
-        //Debug.Log(collision);
+
         // Applying gravity
-        Artificialgravity();
+        //Artificialgravity();
+
         currentState.UpdateState();
         //Debug.Log(currentState);
         // Move the controller
+<<<<<<<< Updated upstream:The Big One/Assets/script/stateMachine/PlayerStateMachine.cs
         characterController.Move(moveDirection * Time.deltaTime);
+========
+        
+        //displays the current speed
+        speed.text = Math.Round(PCC._velocityMagnitude).ToString();
+
+        //Debug.Log(PCC._velocityMagnitude);
+>>>>>>>> Stashed changes:Assets/script/stateMachine/PlayerStateMachine.cs
 
         // Player and Camera rotation
         cameraMovement();
+    }
+
+    private void FixedUpdate()
+    {
+        currentState.FixedState();
+        Artificialgravity();
+        PCC._TGTvelocityDirection = moveDirection;
+        PCC.accelrationCheck(tgtSpeed);
+       
+
     }
 
     private void LateUpdate()
@@ -149,21 +197,7 @@ public class PlayerStateMachine : MonoBehaviour
         playerCamera.transform.localRotation = Quaternion.Euler(rotationX, 0, 0);
 
         transform.rotation *= Quaternion.Euler(0, LookDir().x * lookSpeed, 0);
-
     }
-
-    //void PlayerMovement()
-    //{
-    //    //float movementDirectionY = moveDirection.y;
-
-    //        moveDirection.x = MovementVector().x * walkingSpeed;
-    //        moveDirection.z = MovementVector().z * walkingSpeed;
-
-
-    //    if (jump.WasPressedThisFrame() && PlayerState.canJump())
-    //        moveDirection.y = jumpSpeed;
-    //    //moveDirection.y = (jump.WasPressedThisFrame() && PlayerState.canJump()) ? jumpSpeed : movementDirectionY;
-    //}
 
     public Vector2 MoveDir()
     {
@@ -182,31 +216,39 @@ public class PlayerStateMachine : MonoBehaviour
         Vector3 right = transform.right;
         Vector3 outp = forward * MoveDir().y + right * MoveDir().x;
         return outp;
-
     }
+
     public void Artificialgravity()
     {
-        if (!characterController.isGrounded)
+        if (!PCC.isGrounded())
         {
-            moveDirection.y -= gravity * Time.deltaTime;
+            PCC.ApplyGravity();
         }
-        else
-        {
-            moveDirection.y = Math.Clamp(moveDirection.y, -2, int.MaxValue);
-        }
-        
+
     }
 
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
+<<<<<<<< Updated upstream:The Big One/Assets/script/stateMachine/PlayerStateMachine.cs
         //Debug.Log(collision);
         //this.collision = hit;
         Collide?.Invoke(hit);
         
         
+========
+        //this.collision = hit
+        Collide?.Invoke(hit);
+    }
+
+
+    private void OnTriggerExit(Collider other)
+    {
+        Debug.Log(other.gameObject);
+>>>>>>>> Stashed changes:Assets/script/stateMachine/PlayerStateMachine.cs
     }
 
     #region getters and setters (DO NOT OPEN IF NOT NECESSARY, BRAINROT GURANTEED)
+<<<<<<<< Updated upstream:The Big One/Assets/script/stateMachine/PlayerStateMachine.cs
     public float _gravity {  get {return gravity; }set { gravity = value; } }
     public float _walkingSpeed { get { return walkingSpeed; } set { walkingSpeed = value; } }
     public float _jumpSpeed { get { return jumpSpeed; } set { jumpSpeed = value; } }
@@ -215,6 +257,19 @@ public class PlayerStateMachine : MonoBehaviour
     public float _dashSpeed { get { return dashSpeed; } set { dashSpeed = value; } }
     public float _dashtime { get { return dashtime; } set { dashtime = value; } }
     public float _lookSpeed { get { return lookSpeed; } set { lookSpeed= value; } }
+========
+    public float _gravity {  get => gravity; set => gravity = value; }
+    public float _walkingSpeed { get => walkingSpeed; set => walkingSpeed = value; }
+    public float _jumpSpeed { get => jumpSpeed;  set => jumpSpeed = value; }
+    public float _jumptime { get => jumptime; set => jumptime = value; }
+    public float _slideSpeed { get => slideSpeed; set => slideSpeed = value; }
+    public float _wallSlideSpeed { get => wallSlideSpeed; set => wallSlideSpeed = value; }
+    public float _dashSpeed { get => dashSpeed; set => dashSpeed = value; }
+    public float _dashtime { get => dashtime; set => dashtime = value; }
+    public float _lookSpeed { get => lookSpeed; set => lookSpeed = value; }
+    public float _forceAppliedInAir { get => forceAppliedInAir; set => forceAppliedInAir = value; }
+
+>>>>>>>> Stashed changes:Assets/script/stateMachine/PlayerStateMachine.cs
     public Vector3 _moveDirection { get { return moveDirection; } set { moveDirection = value; } }
     public float _moveDirectionX { get { return moveDirection.x; } set { moveDirection.x = value; } }
     public float _moveDirectionY { get { return moveDirection.y; } set { moveDirection.y = value; } }
@@ -237,8 +292,15 @@ public class PlayerStateMachine : MonoBehaviour
     public Camera _playerCamera { get { return playerCamera; } set { playerCamera = value; } }
     public GameObject _debugGrapplePoint { get { return debugGrapplePoint; } set { debugGrapplePoint = value; } }
     public LineRenderer _lineRenderer { get { return lineRenderer; } set { lineRenderer = value; } }
+<<<<<<<< Updated upstream:The Big One/Assets/script/stateMachine/PlayerStateMachine.cs
+========
+    public InputAction _grapple { get { return grapple; } set { grapple = value; } }
+    public InputAction _grappleHold { get { return grappleHold; } set { grappleHold = value; } }
+    public PlayerCharacterController _getPCC { get { return PCC; } }
+    public float _TGTSpeed { get { return tgtSpeed; } set { tgtSpeed = value; } }
+
+>>>>>>>> Stashed changes:Assets/script/stateMachine/PlayerStateMachine.cs
     //public ControllerColliderHit _collision { get { return collision; } set {  collision = value; } }
 
     #endregion
 }
-

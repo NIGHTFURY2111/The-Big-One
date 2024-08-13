@@ -49,7 +49,7 @@ public  class WallSlideState : BaseState
 
     public override void CheckSwitchState()
     {
-        if(ctx._characterController.isGrounded)
+        if(ctx._getPCC.isGrounded())
         {
             SwitchState(factory.Idle());
             return;

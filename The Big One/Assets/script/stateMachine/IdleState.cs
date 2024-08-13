@@ -14,9 +14,15 @@ public class IdleState : BaseState
 
     public override void EnterState()
     {
+<<<<<<<< Updated upstream:The Big One/Assets/script/stateMachine/IdleState.cs
+========
+        
+>>>>>>>> Stashed changes:Assets/script/stateMachine/IdleState.cs
         ctx._moveDirectionX = 0f;
-        ctx._moveDirectionY = -2f;
+        ctx._moveDirectionY = -0f;
         ctx._moveDirectionZ = 0f;
+        ctx._getPCC._drag = 10;
+        ctx._TGTSpeed = 0f;
     }
 
     public override void UpdateState()
@@ -72,9 +78,19 @@ public class IdleState : BaseState
             SwitchState(factory.Slide());
             return;
         }
+<<<<<<<< Updated upstream:The Big One/Assets/script/stateMachine/IdleState.cs
         
+========
 
-        ctx._grapple.started += OnActionCanceled;
+        if (ctx._getPCC._getvelocityVector.y < -0.01f)  
+        {
+            SwitchState(factory.Fall());
+            return;
+        }
+>>>>>>>> Stashed changes:Assets/script/stateMachine/IdleState.cs
+
+
+        ctx._grapple.started += OnActionCanceled;           
         ctx._grapple.performed += OnActionPerformed;
 
         

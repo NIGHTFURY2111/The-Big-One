@@ -12,16 +12,24 @@ public class FallState : BaseState
     private bool slideCheck = false;
     private float angle;
     private float speed;
+<<<<<<<< Updated upstream:The Big One/Assets/script/stateMachine/FallState.cs
     //public event Action wallAngle;
+========
+    public event Action wallAngle;
+    float tgtVelocity;
+
+>>>>>>>> Stashed changes:Assets/script/stateMachine/FallState.cs
     public FallState(PlayerStateMachine ctx, StateFactory factory) : base(ctx, factory)
     {
         instance = this;
     }
 
+    
 
     public override void EnterState()
     {
         ctx.Collide += FallState.instance.wallCollide;
+<<<<<<<< Updated upstream:The Big One/Assets/script/stateMachine/FallState.cs
         if (slideCheck)
         {
             speed = ctx._slideSpeed;
@@ -35,8 +43,29 @@ public class FallState : BaseState
     {
         ctx._moveDirectionX = ctx.MovementVector().x * speed;
         ctx._moveDirectionZ = ctx.MovementVector().z * speed;
+========
+
+        ctx._getPCC._drag = 2;
+
+        ctx._getPCC._gravity = ctx._gravity;
+
+        ctx._getPCC.setmaxlinvel(500);
+
+        tgtVelocity = ctx._getPCC._velocityMagnitude;
+    }
+
+    public override void FixedState()
+    {
+        ctx._moveDirection = ctx.MovementVector();
+        ctx._getPCC.airMove(ctx._forceAppliedInAir);
+    }
+
+    public override void UpdateState()
+    {
+>>>>>>>> Stashed changes:Assets/script/stateMachine/FallState.cs
         CheckSwitchState();
     }
+
 
     public override void ExitState()
     {
@@ -70,13 +99,15 @@ public class FallState : BaseState
             SwitchState(factory.Dash());
             return;
         }                   
+
         //Idle
-        if (ctx._characterController.isGrounded && !ctx._slide.IsPressed())
+        if (ctx._getPCC.isGrounded() && !ctx._slide.IsPressed())
         {
             SwitchState(factory.Idle());
             return;
         }
-        if(ctx._characterController.isGrounded && ctx._slide.IsPressed())
+
+        if(ctx._getPCC.isGrounded() && ctx._slide.IsPressed())
         {
             SwitchState(factory.Slide());
             return;
@@ -95,12 +126,12 @@ public class FallState : BaseState
 
 
     }
+
     public void wallCollide(ControllerColliderHit hit)
     {
         if (hit.gameObject.CompareTag("wall"))
         {
             angle = Vector3.SignedAngle(hit.normal, hit.moveDirection,Vector3.up);
-            //Debug.Log(angle);
             if (Mathf.Clamp(angle,-ctx._maxWallMovingAngle,ctx._maxWallMovingAngle) == angle)
             {
                 WallRunState wrss = (WallRunState)factory.WallRun();
@@ -112,7 +143,11 @@ public class FallState : BaseState
            
             //SwitchState(factory.WallSlide()); issue is if you are wall jumping and then attach to a wall while falling down you enter in a slide which feels awkward will have to think about wall slide as a whole
 
+<<<<<<<< Updated upstream:The Big One/Assets/script/stateMachine/FallState.cs
             
+========
+            SwitchState(factory.WallSlide());
+>>>>>>>> Stashed changes:Assets/script/stateMachine/FallState.cs
             return;
 
         }
