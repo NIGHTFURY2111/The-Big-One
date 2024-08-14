@@ -6,6 +6,7 @@ using UnityEngine.InputSystem;
 
 public class IdleState : BaseState
 {
+
     public IdleState(PlayerStateMachine ctx, StateFactory factory) : base(ctx, factory)
     {
 
@@ -13,10 +14,11 @@ public class IdleState : BaseState
 
     public override void EnterState()
     {
-
         ctx._moveDirectionX = 0f;
-        ctx._moveDirectionY = -2f;
+        ctx._moveDirectionY = -0f;
         ctx._moveDirectionZ = 0f;
+        ctx._getPCC._drag = 0;
+        ctx._TGTSpeed = 0f;
     }
 
     public override void UpdateState()
@@ -73,8 +75,16 @@ public class IdleState : BaseState
             return;
         }
 
+        if (ctx._getPCC._getvelocityVector.y < -0.01f)  
+        {
+            SwitchState(factory.Fall());
+            return;
+        }
 
-        ctx._grapple.started += OnActionCanceled;
+
+        ctx._grapple.started += OnActionCanceled;           
         ctx._grapple.performed += OnActionPerformed;
+
+        
     }
 }

@@ -34,6 +34,14 @@ public class GrappleStart : BaseState
             t += 0.5f;
             dynamicLoc = Vector3.Lerp(dynamicLoc, ctx._debugGrapplePoint.transform.position, t * Time.deltaTime);
         }
+        //if (ctx._grapple.IsInProgress())
+        //{
+        //    held = true;
+        //}
+        //else
+        //{
+        //    held = false;
+        //}
         CheckSwitchState();
     }
     public override void LateUpdateState()
@@ -68,7 +76,7 @@ public class GrappleStart : BaseState
 
             if (held == true)
             {
-                SwitchState(factory.GrapllePull());
+                SwitchState(factory.GrappleSwing());
                 return;
             }
             else
@@ -84,6 +92,7 @@ public class GrappleStart : BaseState
             //{
             //    SwitchState(factory.GrapllePull());
             //    return;
+            //    }
             //}
         }
     }

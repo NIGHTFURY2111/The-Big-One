@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 public  class WallSlideState : BaseState
@@ -48,7 +49,7 @@ public  class WallSlideState : BaseState
 
     public override void CheckSwitchState()
     {
-        if(ctx._characterController.isGrounded)
+        if(ctx._getPCC.isGrounded())
         {
             SwitchState(factory.Idle());
             return;
@@ -60,6 +61,7 @@ public  class WallSlideState : BaseState
         }
         ctx._grapple.started += OnActionCanceled;
         ctx._grapple.performed += OnActionPerformed;
+
     }
    
 }

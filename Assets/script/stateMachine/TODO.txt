@@ -1,8 +1,7 @@
 ------TODO------
 wall logic (looking vs moving angle difference figure out karo)
 spammable dash (static variable)
-make wallRunJump a bit dynamic (clamp b/w 45 and 60 n change based on where the player is looking)
-controller controls (isinprogress()) NO DONT I HATE IT PWEASE POOKIE
+controller controls (isinprogress())
 revamp air movement(use forces)
 ------DONE------
 gravity in dash state

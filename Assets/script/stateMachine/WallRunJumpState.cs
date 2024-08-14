@@ -22,8 +22,8 @@ public class WallRunJumpState : BaseState
 
         Vector3 wallRunDir = Quaternion.Euler(0, (Mathf.Sign(angle)) * 45, 0) * hit.normal;
 
-        ctx._moveDirectionZ = wallRunDir.z * ctx._magnitude;
-        ctx._moveDirectionX = wallRunDir.x * ctx._magnitude;
+        //ctx._moveDirectionZ = wallRunDir.z * ctx._magnitude;
+        //ctx._moveDirectionX = wallRunDir.x * ctx._magnitude;
 
         ctx._moveDirectionY = ctx._jumpSpeed;
     }

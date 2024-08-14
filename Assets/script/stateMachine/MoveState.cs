@@ -3,24 +3,33 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
-
 public class MoveState : BaseState
 {
-    float speed;
-    float elapsedTime;
-    float percent;
-
+   
     public MoveState(PlayerStateMachine ctx, StateFactory factory) : base(ctx, factory)
     {
     }
 
     public override void EnterState()
     {
+        ctx._TGTSpeed = ctx._walkingSpeed;
+        ctx._getPCC.setmaxlinvel(ctx._walkingSpeed);
+        ctx._getPCC._TGTvelocityMagnitude = ctx._walkingSpeed;
+        ctx._getPCC._drag = 0;     
+    }
+
+    public override void FixedState()
+    {
+        ctx._moveDirectionX = ctx.MovementVector().x;
+        ctx._moveDirectionZ = ctx.MovementVector().z;
+
+
+        ctx._getPCC.calculateAccelration(ctx._TGTSpeed);
+        ctx._getPCC.move();
+
     }
     public override void UpdateState()
     {
-        ctx._moveDirectionX = ctx.MovementVector().x * ctx._walkingSpeed;
-        ctx._moveDirectionZ = ctx.MovementVector().z * ctx._walkingSpeed;
         CheckSwitchState();
     }
     public override void ExitState()
@@ -42,7 +51,7 @@ public class MoveState : BaseState
     {   //idle dash jump  slide fall
         
         //Fall
-        if (!ctx._characterController.isGrounded)
+        if (!ctx._getPCC.isGrounded()) //ctx._characterController.isGrounded
         {
             SwitchState(factory.Fall());
             return;
@@ -74,7 +83,9 @@ public class MoveState : BaseState
             SwitchState(factory.Slide());
             return;
         }
+
         ctx._grapple.started += OnActionCanceled;
         ctx._grapple.performed += OnActionPerformed;
+
     }
 }
