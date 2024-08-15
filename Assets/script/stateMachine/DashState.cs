@@ -15,16 +15,16 @@ public class DashState : BaseState
 
     public override void EnterState()
     {
-        ctx._TGTSpeed = ctx._getPCC._velocityMagnitude + ctx._dashSpeed;    
-        ctx._getPCC.setmaxlinvel(ctx._TGTSpeed);
-        ctx._getPCC._drag = 10;
+        ctx._TGTSpeed = ctx._getPCC._currentVelocityMagnitude + ctx._dashSpeed;    
+        ctx._getPCC.SetMaxlinVel(ctx._TGTSpeed);
+        //ctx._getPCC._drag = 10;
         ctx.StartCoroutine(Dashing());  
     }
 
     public override void FixedState()
     {
         ctx._getPCC.calculateAccelration(ctx._TGTSpeed);
-        ctx._getPCC.dashMove();
+        ctx._getPCC.Move();
     }
 
     public override void UpdateState()
@@ -36,7 +36,7 @@ public class DashState : BaseState
     public override void ExitState()
     {
         ctx._gravity = gravity;
-        ctx._getPCC.setvelocityMagnitudeasZero();
+        ctx._getPCC.SetvelocityMagnitudeasZero();
     }
 
     IEnumerator Dashing()
@@ -55,7 +55,7 @@ public class DashState : BaseState
     {   //fall/idle
 
         //fall
-        if (!ctx._characterController.isGrounded)
+        if (!ctx._isGrounded)
         {
             SwitchState(factory.Fall());
             return;

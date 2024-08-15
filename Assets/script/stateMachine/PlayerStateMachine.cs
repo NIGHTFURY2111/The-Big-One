@@ -10,7 +10,7 @@ public class PlayerStateMachine : MonoBehaviour
 {
     StateFactory stateFactory;
     BaseState currentState;
-    public Text speed;
+    //public Text speed;
     public float slideNormalizingTime;
     public float walkNormalizingTime;
 
@@ -48,17 +48,14 @@ public class PlayerStateMachine : MonoBehaviour
     [SerializeField] LineRenderer lineRenderer;
  
     [HideInInspector]
-    [SerializeField] CharacterController characterController;
+    //[SerializeField] CharacterController characterController;
     PlayerCharacterController PCC;
     Rigidbody rb;
     Collider col;
 
+
     float tgtSpeed;
-
-
-
-
-
+    bool isGrounded;
     public event Action<ControllerColliderHit> Collide;
     private float rotationX = 0;
     private Vector3 slidedir = Vector3.zero;
@@ -82,7 +79,7 @@ public class PlayerStateMachine : MonoBehaviour
     private void Awake()
     {
         stateFactory = new StateFactory(this);
-        characterController = GetComponent<CharacterController>();
+        //characterController = GetComponent<CharacterController>();
         
 
         rb = GetComponent<Rigidbody>();
@@ -144,30 +141,30 @@ public class PlayerStateMachine : MonoBehaviour
 
     void Update()
     {
-
-        // Applying gravity
-        //Artificialgravity();
-
-        currentState.UpdateState();
-        //Debug.Log(currentState);
-        // Move the controller
-        characterController.Move(moveDirection * Time.deltaTime);
-        
-        //displays the current speed
-        speed.text = Math.Round(PCC._velocityMagnitude).ToString();
-
+        isGrounded = _getPCC.isGrounded();
         //Debug.Log(PCC._velocityMagnitude);
+        //Debug.Log(currentState);
+        //characterController.Move(moveDirection * Time.deltaTime);
 
+        // Move the controller
+        currentState.UpdateState();
+        
         // Player and Camera rotation
         cameraMovement();
+
+        //displays the current speed
+        //speed.text = Math.Round(PCC._currentVelocityMagnitude).ToString();
     }
 
     private void FixedUpdate()
     {
         currentState.FixedState();
+        
+        // Applying gravity
         Artificialgravity();
+        
         PCC._TGTvelocityDirection = moveDirection;
-        PCC.accelrationCheck(tgtSpeed);
+        PCC.AccelrationCheck(tgtSpeed);
     }
 
     private void LateUpdate()
@@ -207,15 +204,10 @@ public class PlayerStateMachine : MonoBehaviour
 
     public void Artificialgravity()
     {
-        if (!PCC.isGrounded())
-        {
-            PCC.ApplyGravity();
-        }
-        else 
-        {
+        if (isGrounded)
             PCC._gravity = 2f;
-            PCC.ApplyGravity();
-        }
+
+        PCC.ApplyGravity();
 
     }
 
@@ -223,10 +215,6 @@ public class PlayerStateMachine : MonoBehaviour
     {
         //Debug.Log(collision);
         //this.collision = hit;
-        Collide?.Invoke(hit);
-        
-        
-        //this.collision = hit
         Collide?.Invoke(hit);
     }
 
@@ -245,23 +233,24 @@ public class PlayerStateMachine : MonoBehaviour
     public float _wallSlideSpeed { get => wallSlideSpeed; set => wallSlideSpeed = value; }
     public float _dashSpeed { get => dashSpeed; set => dashSpeed = value; }
     public float _dashtime { get => dashtime; set => dashtime = value; }
-    public float _lookSpeed { get => lookSpeed; set => lookSpeed = value; }
+    //public float _lookSpeed { get => lookSpeed; set => lookSpeed = value; }
     public float _forceAppliedInAir { get => forceAppliedInAir; set => forceAppliedInAir = value; }
 
-    public Vector3 _moveDirection { get { return moveDirection; } set { moveDirection = value; } }
     public float _moveDirectionX { get { return moveDirection.x; } set { moveDirection.x = value; } }
     public float _moveDirectionY { get { return moveDirection.y; } set { moveDirection.y = value; } }
     public float _moveDirectionZ { get { return moveDirection.z; } set { moveDirection.z = value; } }
-    public CharacterController _characterController { get { return characterController; } set { characterController = value; } }
+    public Vector3 _moveDirection { get { return moveDirection; } set { moveDirection = value; } }
+
+    //public CharacterController _characterController { get { return characterController; } set { characterController = value; } }
     public InputAction _move { get { return move; } set { move= value; } }
-    public InputAction _direction{get{return direction;} set{direction = value;}}
+    //public InputAction _direction{get{return direction;} set{direction = value;}}
     public InputAction _dash{get{return dash;} set{ dash= value;}}
     public InputAction _jump{get{return jump;} set{ jump = value;}}
     public InputAction _slide{get{return slide;} set{slide = value;}}
     public BaseState _currentState { get { return currentState; } set { currentState = value; } }
+    public float _maxWallMovingAngle{ get { return maxWallMovingAngle; } set { maxWallMovingAngle = value; } }
     public float _wallRunTime { get { return wallRunTime; } set { wallRunTime = value; } }
     public float _wallRunDecay { get { return wallRunDecay; } set { wallRunDecay = value; } }
-    public float _maxWallMovingAngle{ get { return maxWallMovingAngle; } set { maxWallMovingAngle = value; } }
     public float _minWallMovingAngle{get{return minWallMovingAngle;} set { minWallMovingAngle = value; } }
     public float _maxWalllookingAngle{get{return maxWallLookingAngle;} set { maxWallLookingAngle = value; } }
     public float _minWalllookingAngle{get{return minWallLookingAngle;} set { minWallLookingAngle = value; } }
@@ -272,6 +261,8 @@ public class PlayerStateMachine : MonoBehaviour
     public InputAction _grappleHold { get { return grappleHold; } set { grappleHold = value; } }
     public PlayerCharacterController _getPCC { get { return PCC; } }
     public float _TGTSpeed { get { return tgtSpeed; } set { tgtSpeed = value; } }
+
+    public bool _isGrounded { get => isGrounded; }
 
     //public ControllerColliderHit _collision { get { return collision; } set {  collision = value; } }
 

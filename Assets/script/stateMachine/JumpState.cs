@@ -8,42 +8,43 @@ using UnityEngine.InputSystem;
 
 public class JumpState : BaseState
 {
-    public static JumpState instance;
-    private float speed;
-    private bool slideCheck = false;
+    //public static JumpState instance;
     float tgtVelocity;
     bool jumpCompleted;
+    //private float speed;
+    //private bool slideCheck = false;
     public JumpState(PlayerStateMachine ctx, StateFactory factory) : base(ctx, factory)
     {
-        instance = this;
+        //instance = this;
     }
    
     public override void EnterState()
     {
-        speed = (slideCheck)? ctx._slideSpeed:ctx._walkingSpeed;
-        
-        ctx._getPCC._drag = 0;
+        //speed = (slideCheck)? ctx._slideSpeed:ctx._walkingSpeed;
 
-        ctx._getPCC._gravity = ctx._gravity;
-
-        ctx._getPCC.setmaxlinvel(500);
+        //ctx._getPCC._drag = 0;
 
         //tgtVelocity = ctx._getPCC._velocityMagnitude;
 
         jumpCompleted = false;
 
+        ctx._getPCC._gravity = ctx._gravity;
+
+        ctx._getPCC.SetMaxlinVel(500);
+
         ctx._moveDirectionY = ctx._jumpSpeed;
 
-        tgtVelocity = ctx._getPCC.setCurrentVelocity(ctx._walkingSpeed);
+        tgtVelocity = ctx._getPCC.SetCurrentVelocity(ctx._walkingSpeed);
 
         ctx.StartCoroutine(Jumping());
     }
     public override void FixedState()
     {
         ctx._moveDirection = ctx.MovementVector();
+        ctx._getPCC.AirMove(ctx._forceAppliedInAir);
+
         //ctx._getPCC.calculateAccelration(tgtVelocity);
         //ctx._getPCC.move();
-        ctx._getPCC.airMove(ctx._forceAppliedInAir);
     }
 
     public override void UpdateState()
@@ -56,11 +57,18 @@ public class JumpState : BaseState
     }
     public override void ExitState()
     {
-        slideCheck = false;
+        //slideCheck = false;
     }
-    public void slideEnter()
+    //public void slideEnter()
+    //{
+    //   slideCheck = true;
+    //}
+    IEnumerator Jumping()
     {
-       slideCheck = true;
+        ctx._getPCC.JumpForce(ctx._jumpSpeed);
+        yield return new WaitForSecondsRealtime(ctx._jumptime);     
+        CheckSwitchState();
+        jumpCompleted = true;
     }
 
     private void OnActionCanceled(InputAction.CallbackContext context)
@@ -74,14 +82,6 @@ public class JumpState : BaseState
         SwitchState(factory.GrappleStart());
         GrappleStart.instance.held = true;
         return;
-    }
-
-    IEnumerator Jumping()
-    {
-        ctx._getPCC.jumpForce(ctx._jumpSpeed);
-        yield return new WaitForSecondsRealtime(ctx._jumptime);     
-        CheckSwitchState();
-        jumpCompleted = true;
     }
 
     public override void CheckSwitchState()
@@ -99,11 +99,14 @@ public class JumpState : BaseState
             return;
         }
         //idle
-        if (ctx._getPCC.isGrounded())
+        if (ctx._isGrounded)
         {
             SwitchState(factory.Idle());
             return;
         }
+
+        ctx._grapple.canceled += OnActionCanceled;
+        ctx._grapple.performed += OnActionPerformed;
 
         //if (ctx._collision.gameObject.CompareTag("wall"))
         //{
@@ -116,9 +119,6 @@ public class JumpState : BaseState
         //    SwitchState(factory.GrappleStart());
         //    return;
         //}
-
-        ctx._grapple.canceled += OnActionCanceled;
-        ctx._grapple.performed += OnActionPerformed;
     }
 
 }

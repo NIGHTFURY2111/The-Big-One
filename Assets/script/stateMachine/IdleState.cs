@@ -6,10 +6,13 @@ using UnityEngine.InputSystem;
 
 public class IdleState : BaseState
 {
-
     public IdleState(PlayerStateMachine ctx, StateFactory factory) : base(ctx, factory)
     {
 
+    }
+    public override void ExitState()
+    {
+       
     }
 
     public override void EnterState()
@@ -17,7 +20,8 @@ public class IdleState : BaseState
         ctx._moveDirectionX = 0f;
         ctx._moveDirectionY = -0f;
         ctx._moveDirectionZ = 0f;
-        ctx._getPCC._drag = 0;
+
+        //ctx._getPCC._drag = 0;
         ctx._TGTSpeed = 0f;
     }
 
@@ -26,10 +30,6 @@ public class IdleState : BaseState
         CheckSwitchState();
     }
 
-    public override void ExitState()
-    {
-       
-    }
     private void OnActionCanceled(InputAction.CallbackContext context)
     {
         SwitchState(factory.GrappleStart());
@@ -45,7 +45,7 @@ public class IdleState : BaseState
         return;
     }
     public override void CheckSwitchState()
-    {   //jump walk dash slide
+    {   //jump walk dash slide fall
         
         //Dash
         if (ctx._dash.WasPerformedThisFrame())
@@ -74,17 +74,14 @@ public class IdleState : BaseState
             SwitchState(factory.Slide());
             return;
         }
-
+        //fall
         if (ctx._getPCC._getvelocityVector.y < -0.01f)  
         {
             SwitchState(factory.Fall());
             return;
         }
 
-
         ctx._grapple.started += OnActionCanceled;           
         ctx._grapple.performed += OnActionPerformed;
-
-        
     }
 }

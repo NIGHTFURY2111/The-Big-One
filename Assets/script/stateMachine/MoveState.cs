@@ -9,13 +9,16 @@ public class MoveState : BaseState
     public MoveState(PlayerStateMachine ctx, StateFactory factory) : base(ctx, factory)
     {
     }
+    public override void ExitState()
+    {
+    }
 
     public override void EnterState()
     {
         ctx._TGTSpeed = ctx._walkingSpeed;
-        ctx._getPCC.setmaxlinvel(ctx._walkingSpeed);
+        ctx._getPCC.SetMaxlinVel(ctx._walkingSpeed);
         ctx._getPCC._TGTvelocityMagnitude = ctx._walkingSpeed;
-        ctx._getPCC._drag = 0;     
+        //ctx._getPCC._drag = 0;     
     }
 
     public override void FixedState()
@@ -25,16 +28,14 @@ public class MoveState : BaseState
 
 
         ctx._getPCC.calculateAccelration(ctx._TGTSpeed);
-        ctx._getPCC.move();
-
+        ctx._getPCC.Move();
     }
+
     public override void UpdateState()
     {
         CheckSwitchState();
     }
-    public override void ExitState()
-    {
-    }
+
     private void OnActionCanceled(InputAction.CallbackContext context)
     {
         SwitchState(factory.GrappleStart());
@@ -47,11 +48,12 @@ public class MoveState : BaseState
         GrappleStart.instance.held = true;
         return;
     }
+
     public override void CheckSwitchState()
     {   //idle dash jump  slide fall
         
         //Fall
-        if (!ctx._getPCC.isGrounded()) //ctx._characterController.isGrounded
+        if (!ctx._isGrounded) //ctx._characterController.isGrounded
         {
             SwitchState(factory.Fall());
             return;

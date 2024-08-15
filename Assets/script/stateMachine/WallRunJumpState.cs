@@ -68,7 +68,7 @@ public class WallRunJumpState : BaseState
             return;
         }
         //idle
-        if (ctx._characterController.isGrounded)
+        if (ctx._isGrounded)
         {
             SwitchState(factory.Idle());
             return;

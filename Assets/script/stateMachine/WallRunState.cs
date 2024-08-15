@@ -63,7 +63,7 @@ public class WallRunState : BaseState
     public override void CheckSwitchState()
     {
 
-        if (ctx._characterController.isGrounded)
+        if (ctx._isGrounded)
         {
             SwitchState(factory.Idle());
             return;

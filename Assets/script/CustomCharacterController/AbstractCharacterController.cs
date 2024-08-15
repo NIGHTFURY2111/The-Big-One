@@ -7,6 +7,6 @@ public abstract class AbstractCharacterController
     Rigidbody rigidbody;
     Collider collider;
 
-    public abstract void move();
+    public abstract void Move();
     public abstract bool isGrounded();
 }
