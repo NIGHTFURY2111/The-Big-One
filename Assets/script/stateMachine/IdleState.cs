@@ -21,7 +21,7 @@ public class IdleState : BaseState
         ctx._moveDirectionY = -0f;
         ctx._moveDirectionZ = 0f;
 
-        //ctx._getPCC._drag = 0;
+        ctx._getPCC._drag = 3;
         ctx._TGTSpeed = 0f;
     }
 

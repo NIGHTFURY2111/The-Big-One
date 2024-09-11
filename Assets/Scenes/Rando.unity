@@ -158,7 +158,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 45.200012, y: -37.90326}
+  m_AnchoredPosition: {x: 45.19995, y: -37.90332}
   m_SizeDelta: {x: 341.291, y: 62.025}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &42956866
@@ -999,7 +999,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 45.200012, y: -122}
+  m_AnchoredPosition: {x: 45.19995, y: -122}
   m_SizeDelta: {x: 341.291, y: 62.025}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &822017322
@@ -2158,6 +2158,7 @@ GameObject:
   - component: {fileID: 2002667272}
   - component: {fileID: 2002667273}
   - component: {fileID: 2002667274}
+  - component: {fileID: 2002667275}
   m_Layer: 0
   m_Name: player
   m_TagString: Player
@@ -2223,7 +2224,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2002667262}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.98, y: 1, z: -7.53}
+  m_LocalPosition: {x: 3.98, y: 64.6, z: -7.53}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2246,6 +2247,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slideNormalizingTime: 1.5
   walkNormalizingTime: 0.5
+  enumum: 7
   gravity: 100
   maxGravity: 500
   walkingSpeed: 30
@@ -2302,7 +2304,7 @@ Rigidbody:
   m_GameObject: {fileID: 2002667262}
   serializedVersion: 4
   m_Mass: 1
-  m_Drag: 0
+  m_Drag: 10
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
@@ -2346,6 +2348,36 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canvas: {fileID: 856157475}
+--- !u!114 &2002667275
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2002667262}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Actions: {fileID: -944628639613478452, guid: 1e2721d97c20e694d8a12be1e9ef41d5, type: 3}
+  m_NotificationBehavior: 0
+  m_UIInputModule: {fileID: 0}
+  m_DeviceLostEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_DeviceRegainedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ControlsChangedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ActionEvents: []
+  m_NeverAutoSwitchControlSchemes: 0
+  m_DefaultControlScheme: 
+  m_DefaultActionMap: player
+  m_SplitScreenIndex: -1
+  m_Camera: {fileID: 0}
 --- !u!1 &2061240687
 GameObject:
   m_ObjectHideFlags: 0

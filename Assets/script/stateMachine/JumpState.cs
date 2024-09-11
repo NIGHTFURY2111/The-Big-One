@@ -22,7 +22,7 @@ public class JumpState : BaseState
     {
         //speed = (slideCheck)? ctx._slideSpeed:ctx._walkingSpeed;
 
-        //ctx._getPCC._drag = 0;
+        ctx._getPCC._drag = 0;
 
         //tgtVelocity = ctx._getPCC._velocityMagnitude;
 

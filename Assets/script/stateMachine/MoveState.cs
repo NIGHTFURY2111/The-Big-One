@@ -18,7 +18,7 @@ public class MoveState : BaseState
         ctx._TGTSpeed = ctx._walkingSpeed;
         ctx._getPCC.SetMaxlinVel(ctx._walkingSpeed);
         ctx._getPCC._TGTvelocityMagnitude = ctx._walkingSpeed;
-        //ctx._getPCC._drag = 0;     
+        ctx._getPCC._drag =3;
     }
 
     public override void FixedState()

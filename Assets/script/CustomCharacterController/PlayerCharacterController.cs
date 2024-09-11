@@ -53,7 +53,6 @@ public class PlayerCharacterController : AbstractCharacterController
        
 
             acceleration += (TgtMagnitude - _currentVelocityMagnitude);
-            Debug.Log("0");
         
         //else
         //{

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -15,6 +16,7 @@ public class PlayerStateMachine : MonoBehaviour
     public float walkNormalizingTime;
 
     [Header("General Settings")]
+    [SerializeField] StateEnum enumum;
     [SerializeField] float gravity;
     [SerializeField] float maxGravity;
     [SerializeField] float walkingSpeed;
@@ -74,6 +76,10 @@ public class PlayerStateMachine : MonoBehaviour
 
     //private PlayerState PlayerState;
 
+    public void OnMove(InputValue action)
+    {
+        Vector2 newee = action.Get<Vector2>();
+    }   
 
     #region input
     private void Awake()
@@ -126,6 +132,16 @@ public class PlayerStateMachine : MonoBehaviour
 
     void Start()
     {
+        StateEnum temp = StateEnum.move | StateEnum.dash;
+
+        if(enumum.HasFlag(temp))
+        {
+            Debug.Log(true);
+        }
+        temp = temp | StateEnum.fall;
+
+
+
         InputSystem.settings.SetInternalFeatureFlag("DISABLE_SHORTCUT_SUPPORT", true);
         currentState = stateFactory.Idle();
         currentState.EnterState();
