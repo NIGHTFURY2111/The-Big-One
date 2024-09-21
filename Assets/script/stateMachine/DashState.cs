@@ -6,13 +6,14 @@ using UnityEngine.EventSystems;
 
 public class DashState : BaseState
 {
+    Vector3 DashVector;
+    float gravity;
+
     public DashState(PlayerStateMachine ctx, StateFactory factory) : base(ctx, factory)
     {
         gravity = ctx._gravity;
     }
-    Vector3 DashVector;
-    float gravity;
-
+    
     public override void EnterState()
     {
         ctx._TGTSpeed = ctx._getPCC._currentVelocityMagnitude + ctx._dashSpeed;    
@@ -33,11 +34,7 @@ public class DashState : BaseState
     }
 
         
-    public override void ExitState()
-    {
-        ctx._gravity = gravity;
-        ctx._getPCC.SetvelocityMagnitudeasZero();
-    }
+    
 
     IEnumerator Dashing()
     {
@@ -49,6 +46,13 @@ public class DashState : BaseState
 
         yield return new WaitForSecondsRealtime(ctx._dashtime);
         CheckSwitchState();
+    }
+
+
+    public override void ExitState()
+    {
+        ctx._gravity = gravity;
+        ctx._getPCC.SetvelocityMagnitudeasZero();
     }
 
     public override void CheckSwitchState()

@@ -13,41 +13,30 @@ public class WallRunState : BaseState
     float gavity;
     public WallRunState(PlayerStateMachine ctx, StateFactory factory) : base(ctx, factory)
     {
-        gavity = ctx._gravity;
+       
     }
 
 
     public override void EnterState()
     {
-        ctx._gravity = 0;
-        ctx._moveDirectionY = 0;
-        wallRunDir = Quaternion.Euler(0, (Mathf.Sign(angle))*90, 0)*hit.normal;
-        //Debug.Log(Vector3.Dot(wallRunDir,hit.normal));
-        
-        
-        
+        ctx._getisWall = true;
+        ctx._getPCC._setvelocityVector = new Vector3(ctx._getPCC._getvelocityVector.x,0, ctx._getPCC._getvelocityVector.z);
+       
+
     }
 
     public override void UpdateState()
     {
-        ctx._moveDirectionX = wallRunDir.x * ctx._walkingSpeed;
-        ctx._moveDirectionZ = wallRunDir.z * ctx._walkingSpeed;
+
         CheckSwitchState();
     }
 
     public override void ExitState()
     {
-        ctx._gravity = gavity;
+        ctx._getisWall = false;
     }
 
-    //public void getCollider(ControllerColliderHit hit)
-    //{
-    //    this.hit = hit;
-    //}
-    //public void getangle()
-    //{
-
-    //}
+    
     private void OnActionCanceled(InputAction.CallbackContext context)
     {
         SwitchState(factory.GrappleStart());
@@ -71,6 +60,11 @@ public class WallRunState : BaseState
         if (ctx._jump.WasPerformedThisFrame())
         {
             SwitchState(factory.WallJump());
+            return;
+        }
+        if(!ctx._getPCC.WallRunCheckRight(ctx._getWallRunAngle, ctx._getWallRunRaycastDistance) && !ctx._getPCC.WallRunCheckLeft(ctx._getWallRunAngle, ctx._getWallRunRaycastDistance) || ctx._getPCC._currentHorizontalVelocityMagnitude < 1f )
+        {
+            SwitchState(factory.Idle());
             return;
         }
         ctx._grapple.started += OnActionCanceled;

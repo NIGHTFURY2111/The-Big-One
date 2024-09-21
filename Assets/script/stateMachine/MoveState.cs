@@ -15,10 +15,10 @@ public class MoveState : BaseState
 
     public override void EnterState()
     {
-        ctx._TGTSpeed = ctx._walkingSpeed;
+        //ctx._TGTSpeed = ctx._walkingSpeed;
         ctx._getPCC.SetMaxlinVel(ctx._walkingSpeed);
         ctx._getPCC._TGTvelocityMagnitude = ctx._walkingSpeed;
-        ctx._getPCC._drag =3;
+        ctx._getPCC._drag = ctx._getMoveDragDebug;
     }
 
     public override void FixedState()
@@ -27,7 +27,7 @@ public class MoveState : BaseState
         ctx._moveDirectionZ = ctx.MovementVector().z;
 
 
-        ctx._getPCC.calculateAccelration(ctx._TGTSpeed);
+        //ctx._getPCC.calculateAccelration(ctx._TGTSpeed);
         ctx._getPCC.Move();
     }
 
@@ -86,6 +86,7 @@ public class MoveState : BaseState
             return;
         }
 
+        
         ctx._grapple.started += OnActionCanceled;
         ctx._grapple.performed += OnActionPerformed;
 

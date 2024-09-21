@@ -19,9 +19,11 @@ public class PlayerCharacterController : AbstractCharacterController
     float TGTvelocityMagnitude;
     bool useGravity;
     bool isgrounded;
+    bool isWall;
 
     Vector3 TGTvelocityDirection;
     LayerMask Ground;
+    LayerMask Wall;
 
     public PlayerCharacterController(Rigidbody rb,Collider col)
     {
@@ -62,15 +64,27 @@ public class PlayerCharacterController : AbstractCharacterController
         //}
     }
 
-    public override void Move()
+    public override void Move(float OverrideMagnitude =1f)
     {
-        rb.AddForce(TGTvelocityDirection.normalized * acceleration, ForceMode.VelocityChange);
+        //rb.AddForce(TGTvelocityDirection.normalized * TGTvelocityMagnitude, ForceMode.VelocityChange); 
+        rb.velocity = TGTvelocityDirection.normalized * TGTvelocityMagnitude * OverrideMagnitude;   
         //rb.velocity = TGTvelocityDirection.normalized*TGTvelocityMagnitude;
     }
 
+    public void AirMoveForceLimit(float velocityAtInstance,float airMoveForceLimit)
+    {
+        Vector2 test1 = new Vector2(rb.velocity.x, rb.velocity.z);
+        float test2 = Mathf.Clamp(test1.magnitude, 0, velocityAtInstance + airMoveForceLimit);
+        //float test2 = test1.magnitude;
+        //test2 *= test1.magnitude/(velocityAtInstance + airMoveForceLimit);
+        rb.velocity = new Vector3(test1.normalized.x * test2, rb.velocity.y, test1.normalized.y * test2);
+    }
+
+  
+
     public void AirMove(float airMoveForce)
     {
-        rb.AddForce(TGTvelocityDirection.normalized * _currentVelocityMagnitude * airMoveForce, ForceMode.Acceleration);
+        rb.AddForce(TGTvelocityDirection.normalized *  airMoveForce, ForceMode.Acceleration);
     }   
 
     public void JumpForce(float jumpForce)
@@ -78,6 +92,12 @@ public class PlayerCharacterController : AbstractCharacterController
         float upForce = Mathf.Clamp(jumpForce - rb.velocity.y, 0, Mathf.Infinity);  
         rb.AddForce(new Vector3(0, upForce, 0), ForceMode.VelocityChange);
         //rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+    }
+
+    public void WallJumpForce(Vector3 Dir, float jumpForce)
+    {
+        float upForce = Mathf.Clamp(jumpForce - rb.velocity.y, 0, Mathf.Infinity);
+        rb.AddForce(Dir*jumpForce, ForceMode.VelocityChange);
     }
 
     public float SetCurrentVelocity(float defaultStateVel)
@@ -95,6 +115,26 @@ public class PlayerCharacterController : AbstractCharacterController
         return isgrounded;
     }
 
+    RaycastHit hit;
+
+    public bool WallRunCheckRight(float angleToRotateBy,float rayCastDistance)
+    {
+        Vector3 rightVectorUpper = Quaternion.AngleAxis(angleToRotateBy, rb.transform.up) * rb.transform.right;
+        Vector3 rightVectorLower = Quaternion.AngleAxis(-angleToRotateBy, rb.transform.up) * rb.transform.right;
+        isWall = Physics.Raycast(rb.transform.position, rightVectorUpper, out hit, rayCastDistance,Wall) || Physics.Raycast(rb.transform.position, rightVectorLower, out hit, rayCastDistance, Wall);
+        
+        return isWall;
+    }
+
+    public bool WallRunCheckLeft(float angleToRotateBy, float rayCastDistance)
+    {
+
+        Vector3 leftVectorUpper = Quaternion.AngleAxis(angleToRotateBy+180, rb.transform.up) * rb.transform.right;
+        Vector3 leftVectorLower = Quaternion.AngleAxis(-(angleToRotateBy+180), rb.transform.up) * rb.transform.right;
+        isWall = Physics.Raycast(rb.transform.position, leftVectorUpper,out hit, rayCastDistance, Wall) || Physics.Raycast(rb.transform.position, leftVectorLower,out hit, rayCastDistance, Wall);  
+
+        return isWall;
+    }
 
     public void SetvelocityMagnitudeasZero()
     { 
@@ -110,13 +150,16 @@ public class PlayerCharacterController : AbstractCharacterController
         return rb.velocity.y;
     }
 
+
     #region Character Movement Variables
     #region script variables
     public float _currentVelocityMagnitude { get { return rb.velocity.magnitude; } }
+    public float _currentHorizontalVelocityMagnitude { get => new Vector2(rb.velocity.x, rb.velocity.z).magnitude; }
     public Vector3 _getvelocityVector { get { return rb.velocity; } }
     public Vector3 _setvelocityVector { set { rb.velocity = value; } }
     public bool _useGravity { get { return useGravity; } }
     public void _setGroundLayer(LayerMask lm) {  Ground = lm;  }
+    public void _setWallLayer(LayerMask lm) { Wall = lm; }
     #endregion
 
     public float _TGTvelocityMagnitude { get { return rb.velocity.magnitude; } set { TGTvelocityMagnitude = value; } }
@@ -126,5 +169,9 @@ public class PlayerCharacterController : AbstractCharacterController
     public float _angulardrag { get { return rb.angularDrag; } set { rb.angularDrag = value; } }
     public float _gravity { get { return gravity; } set { gravity = value; } }
     public float _TGTvelvocity{ get { return TGTvelocityMagnitude; } }
+
+    public Rigidbody _rb { get { return rb; } }
+
+    
     #endregion
 }

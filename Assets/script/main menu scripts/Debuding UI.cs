@@ -41,7 +41,7 @@ public class DebudingUI : MonoBehaviour
 
         //ui_elements[1].text = (psm._getPCC.GetCurrentVertical()).ToString();
         ui_elements[1].text = lasterState + "  =>  " + lastState + "  =>  "+ currentState;
-        ui_elements[2].text = psm._getPCC._TGTvelvocity.ToString() +"     "+ psm._getPCC._acceleration.ToString();
+        //ui_elements[2].text = psm._getPCC._TGTvelvocity.ToString() +"     "+ psm._getPCC._acceleration.ToString();
         
         //Debug.Log(ui_elements[0].name);
     }

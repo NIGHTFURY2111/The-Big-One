@@ -9,55 +9,49 @@ public class WallJumpState : BaseState
     Vector3 JumpVector;
     ControllerColliderHit hit;
     public static WallJumpState instance;
-    //float timer = 0.5f;
+    bool jumpCompleted;
+    Vector3 jumpDir;
+    Vector3 lastInput;
+    Vector3 wallNormal;
     public WallJumpState(PlayerStateMachine ctx, StateFactory factory) : base(ctx, factory)
     {
         instance = this;
     }
 
+    
 
     public override void EnterState()
     {
-        //JumpVector = ctx.MovementVector() * ctx._walkingSpeed;
-        //ctx._moveDirectionX = JumpVector.x;
-        //ctx._moveDirectionZ = JumpVector.y;
-        ctx._moveDirectionZ = hit.normal.z * ctx._walkingSpeed;
-        ctx._moveDirectionX = hit.normal.x * ctx._walkingSpeed;
-        
-
-        ctx._moveDirectionY = ctx._jumpSpeed;
+        //lastInput = new Vector3(ctx.MovementVector().x, 0,ctx.MovementVector().z);
+        jumpCompleted = false;
+        wallNormal = ctx._getWallNormal;
+        jumpDir = Vector3.up + wallNormal; 
+        ctx.StartCoroutine(Jumping());
     }
 
-
-    //public override void UpdateState()
-    //{
-    //    //ctx._moveDirectionX = JumpVector.x;
-    //    //ctx._moveDirectionZ = JumpVector.y;s
-    //    CheckSwitchState();
-    //}
 
     public override void ExitState()
     {
         
     }
 
-    //public override void CheckSwitchState()
-    //{
-    //    if(ctx._characterController.isGrounded)
-    //    {
-    //        SwitchState(factory.Idle());
-    //        return;
-    //    } 
-    //}
     public void getCollider(ControllerColliderHit hit)
     {
         this.hit = hit;
     }
 
+
+    IEnumerator Jumping()
+    {
+        ctx._getPCC.WallJumpForce(jumpDir.normalized    ,ctx._jumpSpeed);
+        yield return new WaitForSecondsRealtime(ctx._jumptime);
+        CheckSwitchState();
+        jumpCompleted = true;
+    }
+
     public override void UpdateState()
     {
-        //ctx._moveDirectionX = ctx.MovementVector().x * ctx._walkingSpeed;
-        //ctx._moveDirectionZ = ctx.MovementVector().z * ctx._walkingSpeed;
+
         CheckSwitchState();
     }
     private void OnActionCanceled(InputAction.CallbackContext context)

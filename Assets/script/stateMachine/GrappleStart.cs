@@ -20,6 +20,9 @@ public class GrappleStart : BaseState
         ctx._lineRenderer.positionCount = 2;
         dynamicLoc = ctx.transform.position;
 
+        ctx._TGTSpeed = ctx._walkingSpeed;
+        ctx._getPCC._drag = ctx._getMoveDragDebug;
+
         if (Physics.Raycast(ctx.transform.position,ctx._playerCamera.transform.forward,out RaycastHit raycastHit))
         {
             ctx._debugGrapplePoint.transform.position = raycastHit.point;
@@ -27,8 +30,8 @@ public class GrappleStart : BaseState
     }
     public override void UpdateState()
     {
-        ctx._moveDirectionX = ctx.MovementVector().x * speed;
-        ctx._moveDirectionZ = ctx.MovementVector().z * speed;
+        //ctx._moveDirectionX = ctx.MovementVector().x * speed;
+        //ctx._moveDirectionZ = ctx.MovementVector().z * speed;
         if((dynamicLoc != ctx._debugGrapplePoint.transform.position))
         {
             t += 0.5f;

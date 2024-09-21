@@ -13,6 +13,8 @@ public class JumpState : BaseState
     bool jumpCompleted;
     //private float speed;
     //private bool slideCheck = false;
+
+    float test;
     public JumpState(PlayerStateMachine ctx, StateFactory factory) : base(ctx, factory)
     {
         //instance = this;
@@ -28,7 +30,6 @@ public class JumpState : BaseState
 
         jumpCompleted = false;
 
-        ctx._getPCC._gravity = ctx._gravity;
 
         ctx._getPCC.SetMaxlinVel(500);
 
@@ -36,15 +37,16 @@ public class JumpState : BaseState
 
         tgtVelocity = ctx._getPCC.SetCurrentVelocity(ctx._walkingSpeed);
 
+        test = ctx._getPCC._currentHorizontalVelocityMagnitude;
+
         ctx.StartCoroutine(Jumping());
     }
     public override void FixedState()
     {
         ctx._moveDirection = ctx.MovementVector();
         ctx._getPCC.AirMove(ctx._forceAppliedInAir);
+        ctx._getPCC.AirMoveForceLimit(test, ctx._getMaxVelocityInAir);
 
-        //ctx._getPCC.calculateAccelration(tgtVelocity);
-        //ctx._getPCC.move();
     }
 
     public override void UpdateState()
@@ -57,12 +59,10 @@ public class JumpState : BaseState
     }
     public override void ExitState()
     {
+        ctx._getPCC.AirMoveForceLimit(0,float.MaxValue);
         //slideCheck = false;
     }
-    //public void slideEnter()
-    //{
-    //   slideCheck = true;
-    //}
+
     IEnumerator Jumping()
     {
         ctx._getPCC.JumpForce(ctx._jumpSpeed);
@@ -108,17 +108,12 @@ public class JumpState : BaseState
         ctx._grapple.canceled += OnActionCanceled;
         ctx._grapple.performed += OnActionPerformed;
 
-        //if (ctx._collision.gameObject.CompareTag("wall"))
-        //{
-        //    SwitchState(factory.WallSlide());
-        //    return;
-        //}
-
-        //if (ctx._grapple.WasPerformedThisFrame())
-        //{
-        //    SwitchState(factory.GrappleStart());
-        //    return;
-        //}
+        if (ctx._getPCC.WallRunCheckRight(ctx._getWallRunAngle, ctx._getWallRunRaycastDistance))
+        {
+            SwitchState(factory.WallRun());
+            //ctx._getisWall = true;
+            return;
+        }
     }
 
 }

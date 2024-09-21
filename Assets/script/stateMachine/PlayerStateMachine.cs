@@ -24,6 +24,9 @@ public class PlayerStateMachine : MonoBehaviour
     [SerializeField] float jumptime;
     [SerializeField] float slideSpeed;
     [SerializeField] float forceAppliedInAir;
+    [SerializeField] float maxVelocityAddedInAir;
+    [SerializeField] float moveDragDebug;
+    [SerializeField] float idleDragDebug;
     [SerializeField] LayerMask Ground;
 
 
@@ -35,10 +38,10 @@ public class PlayerStateMachine : MonoBehaviour
     [SerializeField] float wallSlideSpeed;
     [SerializeField] float wallRunTime;
     [SerializeField] float wallRunDecay;
-    [SerializeField] float maxWallMovingAngle;
-    [SerializeField] float minWallMovingAngle;
-    [SerializeField] float maxWallLookingAngle;
-    [SerializeField] float minWallLookingAngle;
+    [SerializeField] float wallRunRaycastAngle;
+    [SerializeField] float maxWallRaycastDistance;
+    [SerializeField] float minWallRunSpeedReq;
+    [SerializeField] LayerMask Wall;
 
     [Header("Camera Settings")]
     [SerializeField] float lookSpeed;
@@ -48,7 +51,7 @@ public class PlayerStateMachine : MonoBehaviour
     [Header("Grapple Settings")]
     [SerializeField] GameObject debugGrapplePoint;
     [SerializeField] LineRenderer lineRenderer;
- 
+
     [HideInInspector]
     //[SerializeField] CharacterController characterController;
     PlayerCharacterController PCC;
@@ -58,6 +61,8 @@ public class PlayerStateMachine : MonoBehaviour
 
     float tgtSpeed;
     bool isGrounded;
+    bool isWall;
+    Vector3 wallNormal;
     public event Action<ControllerColliderHit> Collide;
     private float rotationX = 0;
     private Vector3 slidedir = Vector3.zero;
@@ -72,27 +77,29 @@ public class PlayerStateMachine : MonoBehaviour
     private InputAction grappleHold;
     private ControllerColliderHit collision;
 
-    
+
+
 
     //private PlayerState PlayerState;
 
     public void OnMove(InputValue action)
     {
         Vector2 newee = action.Get<Vector2>();
-    }   
+    }
 
     #region input
     private void Awake()
     {
         stateFactory = new StateFactory(this);
         //characterController = GetComponent<CharacterController>();
-        
+
 
         rb = GetComponent<Rigidbody>();
         col = GetComponent<CapsuleCollider>();
         PCC = new PlayerCharacterController(rb, col);
         PCC._setGroundLayer(Ground);
-        
+        PCC._setWallLayer(Wall);
+
 
 
         control = new();
@@ -103,7 +110,7 @@ public class PlayerStateMachine : MonoBehaviour
         slide = control.player.slide;
         direction = control.player.camera;
         grapple = control.player.Grapple;
-        grappleHold = control.player.GrappleHold;   
+        grappleHold = control.player.GrappleHold;
 
     }
 
@@ -134,7 +141,7 @@ public class PlayerStateMachine : MonoBehaviour
     {
         StateEnum temp = StateEnum.move | StateEnum.dash;
 
-        if(enumum.HasFlag(temp))
+        if (enumum.HasFlag(temp))
         {
             Debug.Log(true);
         }
@@ -157,6 +164,7 @@ public class PlayerStateMachine : MonoBehaviour
 
     void Update()
     {
+
         isGrounded = _getPCC.isGrounded();
         //Debug.Log(PCC._velocityMagnitude);
         //Debug.Log(currentState);
@@ -164,21 +172,24 @@ public class PlayerStateMachine : MonoBehaviour
 
         // Move the controller
         currentState.UpdateState();
-        
+
         // Player and Camera rotation
         cameraMovement();
 
         //displays the current speed
         //speed.text = Math.Round(PCC._currentVelocityMagnitude).ToString();
+
+
+
     }
 
     private void FixedUpdate()
     {
         currentState.FixedState();
-        
+
         // Applying gravity
         Artificialgravity();
-        
+
         PCC._TGTvelocityDirection = moveDirection;
         PCC.AccelrationCheck(tgtSpeed);
     }
@@ -220,11 +231,8 @@ public class PlayerStateMachine : MonoBehaviour
 
     public void Artificialgravity()
     {
-        if (isGrounded)
-            PCC._gravity = 2f;
-
-        PCC.ApplyGravity();
-
+        if (!isGrounded && !isWall)
+            PCC.ApplyGravity();
     }
 
     private void OnControllerColliderHit(ControllerColliderHit hit)
@@ -234,6 +242,18 @@ public class PlayerStateMachine : MonoBehaviour
         Collide?.Invoke(hit);
     }
 
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision != null)
+        {
+            // gameobject.layer takes the specific layer number of the desired layer to be checked, in this case wall is at 7th position in the editor, so it is 7
+            // alternative is wall.layer == 1 << collision.gameobject.layer , which essentially is just reverse bit shifting by 7 to check if it is the wall layer
+            if (collision.gameObject.layer == 7) 
+            {
+                wallNormal = collision.contacts[0].normal;
+            }
+        }
+    }
 
     private void OnTriggerExit(Collider other)
     {
@@ -241,9 +261,9 @@ public class PlayerStateMachine : MonoBehaviour
     }
 
     #region getters and setters (DO NOT OPEN IF NOT NECESSARY, BRAINROT GURANTEED)
-    public float _gravity {  get => gravity; set => gravity = value; }
+    public float _gravity { get => gravity; set => gravity = value; }
     public float _walkingSpeed { get => walkingSpeed; set => walkingSpeed = value; }
-    public float _jumpSpeed { get => jumpSpeed;  set => jumpSpeed = value; }
+    public float _jumpSpeed { get => jumpSpeed; set => jumpSpeed = value; }
     public float _jumptime { get => jumptime; set => jumptime = value; }
     public float _slideSpeed { get => slideSpeed; set => slideSpeed = value; }
     public float _wallSlideSpeed { get => wallSlideSpeed; set => wallSlideSpeed = value; }
@@ -258,18 +278,14 @@ public class PlayerStateMachine : MonoBehaviour
     public Vector3 _moveDirection { get { return moveDirection; } set { moveDirection = value; } }
 
     //public CharacterController _characterController { get { return characterController; } set { characterController = value; } }
-    public InputAction _move { get { return move; } set { move= value; } }
+    public InputAction _move { get { return move; } set { move = value; } }
     //public InputAction _direction{get{return direction;} set{direction = value;}}
-    public InputAction _dash{get{return dash;} set{ dash= value;}}
-    public InputAction _jump{get{return jump;} set{ jump = value;}}
-    public InputAction _slide{get{return slide;} set{slide = value;}}
+    public InputAction _dash { get { return dash; } set { dash = value; } }
+    public InputAction _jump { get { return jump; } set { jump = value; } }
+    public InputAction _slide { get { return slide; } set { slide = value; } }
     public BaseState _currentState { get { return currentState; } set { currentState = value; } }
-    public float _maxWallMovingAngle{ get { return maxWallMovingAngle; } set { maxWallMovingAngle = value; } }
     public float _wallRunTime { get { return wallRunTime; } set { wallRunTime = value; } }
     public float _wallRunDecay { get { return wallRunDecay; } set { wallRunDecay = value; } }
-    public float _minWallMovingAngle{get{return minWallMovingAngle;} set { minWallMovingAngle = value; } }
-    public float _maxWalllookingAngle{get{return maxWallLookingAngle;} set { maxWallLookingAngle = value; } }
-    public float _minWalllookingAngle{get{return minWallLookingAngle;} set { minWallLookingAngle = value; } }
     public Camera _playerCamera { get { return playerCamera; } set { playerCamera = value; } }
     public GameObject _debugGrapplePoint { get { return debugGrapplePoint; } set { debugGrapplePoint = value; } }
     public LineRenderer _lineRenderer { get { return lineRenderer; } set { lineRenderer = value; } }
@@ -280,7 +296,23 @@ public class PlayerStateMachine : MonoBehaviour
 
     public bool _isGrounded { get => isGrounded; }
 
+    public float _getMoveDragDebug { get { return moveDragDebug; } }
+    public float _getIdleDragDebug { get { return idleDragDebug; } }
+
+    public float _getMaxVelocityInAir { get { return maxVelocityAddedInAir; } }
+
+    public float _getWallRunAngle { get => wallRunRaycastAngle; }
+
+    public float _getWallRunRaycastDistance { get => maxWallRaycastDistance; }
+
+    public bool _getisWall { get { return isWall; } set { isWall = value; } }
+
+    public float _getWallRunReqSpeed { get { return minWallRunSpeedReq; } }
+
+    public Vector3 _getWallNormal { get { return wallNormal; } }
+
     //public ControllerColliderHit _collision { get { return collision; } set {  collision = value; } }
 
     #endregion
 }
+

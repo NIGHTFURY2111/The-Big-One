@@ -13,6 +13,8 @@ public class FallState : BaseState
     private float speed;
     private float tgtVelocity;
     public event Action wallAngle;
+
+    float test;
     //public event Action wallAngle;
     //private bool slideCheck = false;
 
@@ -25,20 +27,23 @@ public class FallState : BaseState
 
     public override void EnterState()
     {
-        ctx.Collide += FallState.instance.wallCollide;
-                            
-        //ctx._getPCC._drag = 0;
-        ctx._getPCC._gravity = ctx._gravity;
+        //ctx.Collide += FallState.instance.wallCollide;
+
+        ctx._getPCC._drag = 0;
 
         tgtVelocity = ctx._getPCC._currentVelocityMagnitude;
         ctx._getPCC.SetMaxlinVel(500);
         ctx._getPCC.SetCurrentVelocity(ctx._getPCC._currentVelocityMagnitude);
+
+        test = ctx._getPCC._currentHorizontalVelocityMagnitude;
+            
     }
 
     public override void FixedState()
-    {
+    {   
         ctx._moveDirection = ctx.MovementVector();
         ctx._getPCC.AirMove(ctx._forceAppliedInAir);
+        ctx._getPCC.AirMoveForceLimit(test, ctx._getMaxVelocityInAir);
     }
 
     public override void UpdateState()
@@ -49,7 +54,8 @@ public class FallState : BaseState
 
     public override void ExitState()
     {
-        ctx.Collide -= FallState.instance.wallCollide;
+        ctx._getPCC.AirMoveForceLimit(0,float.MaxValue);
+        //ctx.Collide -= FallState.instance.wallCollide;
         //slideCheck = false;
     }
     //public void slideEnter()
@@ -94,35 +100,44 @@ public class FallState : BaseState
             return;
         }
 
-        //if (ctx._grapple.WasPerformedThisFrame())
-        //{
-        //    SwitchState(factory.GrappleStart());
-        //    return;
-        //}
-
-        ctx._grapple.started += OnActionCanceled;
-        ctx._grapple.performed += OnActionPerformed;
-
-    }
-
-    public void wallCollide(ControllerColliderHit hit)
-    {
-        if (hit.gameObject.CompareTag("wall"))
+        if (ctx._getPCC.WallRunCheckRight(ctx._getWallRunAngle, ctx._getWallRunRaycastDistance) || ctx._getPCC.WallRunCheckLeft(ctx._getWallRunAngle, ctx._getWallRunRaycastDistance))
         {
-            angle = Vector3.SignedAngle(hit.normal, hit.moveDirection,Vector3.up);
-            if (Mathf.Clamp(angle,-ctx._maxWallMovingAngle,ctx._maxWallMovingAngle) == angle)
+            if (ctx._getPCC._currentHorizontalVelocityMagnitude > ctx._getWallRunReqSpeed)
             {
-                WallRunState wrss = (WallRunState)factory.WallRun();
-                wrss._angle = angle;
-                wrss._hit = hit;
                 SwitchState(factory.WallRun());
                 return;
             }
-           
-            //SwitchState(factory.WallSlide()); issue is if you are wall jumping and then attach to a wall while falling down you enter in a slide which feels awkward will have to think about wall slide as a whole
-
-            SwitchState(factory.WallSlide());
-            return;
         }
+
+            //if (ctx._grapple.WasPerformedThisFrame())
+            //{
+            //    SwitchState(factory.GrappleStart());
+            //    return;
+            //}
+
+            ctx._grapple.started += OnActionCanceled;
+            ctx._grapple.performed += OnActionPerformed;
+
     }
+
+    //public void wallCollide(ControllerColliderHit hit)
+    //{
+    //    if (hit.gameObject.CompareTag("wall"))
+    //    {
+    //        angle = Vector3.SignedAngle(hit.normal, hit.moveDirection,Vector3.up);
+    //        if (Mathf.Clamp(angle,-ctx._maxWallMovingAngle,ctx._maxWallMovingAngle) == angle)
+    //        {
+    //            WallRunState wrss = (WallRunState)factory.WallRun();
+    //            wrss._angle = angle;
+    //            wrss._hit = hit;
+    //            SwitchState(factory.WallRun());
+    //            return;
+    //        }
+           
+    //        //SwitchState(factory.WallSlide()); issue is if you are wall jumping and then attach to a wall while falling down you enter in a slide which feels awkward will have to think about wall slide as a whole
+
+    //        SwitchState(factory.WallSlide());
+    //        return;
+    //    }
 }
+
