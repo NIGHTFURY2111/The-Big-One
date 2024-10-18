@@ -67,7 +67,7 @@ public class PlayerCharacterController : AbstractCharacterController
     public override void Move(float OverrideMagnitude =1f)
     {
         //rb.AddForce(TGTvelocityDirection.normalized * TGTvelocityMagnitude, ForceMode.VelocityChange); 
-        rb.velocity = TGTvelocityDirection.normalized * TGTvelocityMagnitude * OverrideMagnitude;   
+        rb.velocity = new Vector3(TGTvelocityDirection.normalized.x, 0, TGTvelocityDirection.normalized.z) * TGTvelocityMagnitude * OverrideMagnitude;   
         //rb.velocity = TGTvelocityDirection.normalized*TGTvelocityMagnitude;
     }
 
@@ -96,7 +96,8 @@ public class PlayerCharacterController : AbstractCharacterController
 
     public void WallJumpForce(Vector3 Dir, float jumpForce)
     {
-        float upForce = Mathf.Clamp(jumpForce - rb.velocity.y, 0, Mathf.Infinity);
+        //float upForce = Mathf.Clamp(jumpForce - rb.velocity.y, 0, Mathf.Infinity);
+        Debug.Log(Dir * jumpForce);
         rb.AddForce(Dir*jumpForce, ForceMode.VelocityChange);
     }
 

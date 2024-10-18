@@ -31,7 +31,7 @@ public class StateFactory
         grappleSwing = new GrappleSwing(_context,this); 
 
         //SlideState.Instance.slideExit += JumpState.instance.slideEnter;
-        _context.Collide += WallJumpState.instance.getCollider;
+        //_context.Collide += WallJumpState.instance.getCollider;
         //_context.Collide += WallRunState.instance.getCollider;
         // ctx.Collide += FallState.instance.wallCollide;(un/subscribed in fallstate)
     }

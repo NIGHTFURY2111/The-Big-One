@@ -24,7 +24,8 @@ public class SlideState : BaseState
         ctx._getPCC.SetMaxlinVel(ctx._TGTSpeed);
 
         slidedir = ((ctx.MoveDir().magnitude == 0) ? ctx.transform.forward : ctx.MovementVector());
-        //ctx.transform.localScale = new Vector3(1, 0.5f, 1);
+        ctx._getPCC._drag = ctx._getMoveDragDebug;
+        ctx.transform.localScale = new Vector3(1, 0.5f, 1);
     }
 
     public override void UpdateState()
@@ -53,7 +54,7 @@ public class SlideState : BaseState
 
     public override void ExitState()
     {
-        //ctx.transform.localScale = new Vector3(1, 1, 1);
+        ctx.transform.localScale = new Vector3(1, 1, 1);
         //slideExit?.Invoke();
         
     }

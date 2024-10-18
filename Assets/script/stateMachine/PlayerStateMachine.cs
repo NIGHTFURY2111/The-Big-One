@@ -121,8 +121,8 @@ public class PlayerStateMachine : MonoBehaviour
         jump.Enable();
         slide.Enable();
         direction.Enable();
-        grapple.Enable();
-        grappleHold.Enable();
+        //grapple.Enable();
+        //grappleHold.Enable();
     }
 
     private void OnDisable()
@@ -132,8 +132,8 @@ public class PlayerStateMachine : MonoBehaviour
         jump.Disable();
         slide.Disable();
         direction.Disable();
-        grapple.Disable();
-        grappleHold.Disable();
+        //grapple.Disable();
+        //grappleHold.Disable();
     }
     #endregion
 

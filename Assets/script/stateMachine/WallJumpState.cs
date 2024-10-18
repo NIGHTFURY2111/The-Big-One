@@ -7,7 +7,7 @@ using UnityEngine.InputSystem;
 public class WallJumpState : BaseState
 {
     Vector3 JumpVector;
-    ControllerColliderHit hit;
+    //ControllerColliderHit hit;
     public static WallJumpState instance;
     bool jumpCompleted;
     Vector3 jumpDir;
@@ -22,7 +22,6 @@ public class WallJumpState : BaseState
 
     public override void EnterState()
     {
-        //lastInput = new Vector3(ctx.MovementVector().x, 0,ctx.MovementVector().z);
         jumpCompleted = false;
         wallNormal = ctx._getWallNormal;
         jumpDir = Vector3.up + wallNormal; 
@@ -35,24 +34,28 @@ public class WallJumpState : BaseState
         
     }
 
-    public void getCollider(ControllerColliderHit hit)
-    {
-        this.hit = hit;
-    }
+    //public void getCollider(ControllerColliderHit hit)
+    //{
+    //    this.hit = hit;
+    //}
 
+    void Jumpfunct()
+    {
+        ctx._getPCC.WallJumpForce(jumpDir.normalized, ctx._jumpSpeed);
+    }
 
     IEnumerator Jumping()
     {
-        ctx._getPCC.WallJumpForce(jumpDir.normalized    ,ctx._jumpSpeed);
+        ctx._getPCC.WallJumpForce(jumpDir.normalized    ,35f);  
         yield return new WaitForSecondsRealtime(ctx._jumptime);
-        CheckSwitchState();
         jumpCompleted = true;
     }
 
     public override void UpdateState()
     {
-
-        CheckSwitchState();
+      if(jumpCompleted)
+       CheckSwitchState();
+        
     }
     private void OnActionCanceled(InputAction.CallbackContext context)
     {
@@ -87,6 +90,12 @@ public class WallJumpState : BaseState
             SwitchState(factory.Idle());
             return;
         }
+        //else
+        //{
+        //    SwitchState(factory.Fall());
+        //    return;
+        //}
+
         //if (ctx._collision.gameObject.CompareTag("wall"))
         //{
         //    SwitchState(factory.WallSlide());

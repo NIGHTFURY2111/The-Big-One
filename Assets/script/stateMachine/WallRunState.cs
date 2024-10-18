@@ -21,13 +21,11 @@ public class WallRunState : BaseState
     {
         ctx._getisWall = true;
         ctx._getPCC._setvelocityVector = new Vector3(ctx._getPCC._getvelocityVector.x,0, ctx._getPCC._getvelocityVector.z);
-       
-
+        ctx._getPCC._TGTvelocityMagnitude = ctx._walkingSpeed;
     }
 
     public override void UpdateState()
     {
-
         CheckSwitchState();
     }
 
