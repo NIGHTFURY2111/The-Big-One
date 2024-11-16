@@ -3,34 +3,59 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 public class respawn : MonoBehaviour
 {
-    [SerializeField] private float killzone;
-    [SerializeField] private List<GameObject> RespawnPoints;
+    public static event Action<Transform> OnRespawnTriggerEvent;
     public static event Action OnRespawn;
 
-    private Vector3 pos;
+    [SerializeField] private float killzone;
+    Transform RespawnPoint;
+
+    private Vector3 pointPosition;
+    private Quaternion pointRotation;
 
 
 
     private void Start()
     {
-        RespawnTrgger.OnRespawnTriggerEvent += TriggerEventInovke;
+        OnRespawnTriggerEvent += TriggerEventInovke;
     }
     void Update()
     {
-        if (transform.position.y < killzone)
-            transform.position = pos;
-            
+        if (transform.position.y < killzone) { RespawnPlayer(); }
     }
 
     void TriggerEventInovke(Transform t)
     {
-       pos = t.position;
-       OnRespawn?.Invoke();
+        pointPosition = t.position;
+        pointRotation = t.rotation;
+
     }
 
+    public void OnRestart(InputValue pressed)
+    {
+        if (pressed.isPressed)
+        {
+            RespawnPlayer();
+        }
+    }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "Respawn")
+        {
+            RespawnPoint = other.transform.GetChild(0);
+            OnRespawnTriggerEvent?.Invoke(RespawnPoint.transform);
+        }
+    }
+
+    private void RespawnPlayer()
+    {
+        transform.position = pointPosition;
+        transform.rotation = pointRotation;
+        OnRespawn?.Invoke();
+    }
 }

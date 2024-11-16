@@ -11,9 +11,12 @@ public class PlayerStateMachine : MonoBehaviour
 {
     StateFactory stateFactory;
     BaseState currentState;
+    FloatValue dashModifier = new();
+    public static event Action<bool> GamePaused;
     //public Text speed;
     public float slideNormalizingTime;
     public float walkNormalizingTime;
+
 
     [Header("General Settings")]
     [SerializeField] StateEnum enumum;
@@ -147,7 +150,7 @@ public class PlayerStateMachine : MonoBehaviour
         }
         temp = temp | StateEnum.fall;
 
-
+        respawn.OnRespawn += ResetVelocity;
 
         InputSystem.settings.SetInternalFeatureFlag("DISABLE_SHORTCUT_SUPPORT", true);
         currentState = stateFactory.Idle();
@@ -164,7 +167,6 @@ public class PlayerStateMachine : MonoBehaviour
 
     void Update()
     {
-
         isGrounded = _getPCC.isGrounded();
         //Debug.Log(PCC._velocityMagnitude);
         //Debug.Log(currentState);
@@ -257,7 +259,29 @@ public class PlayerStateMachine : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        Debug.Log(other.gameObject);
+        //Debug.Log(other.gameObject);
+    }
+
+    //unlocks the cursor so that changes to values can be made
+    public void OnPauseEscape()
+    {
+        if (Cursor.lockState == CursorLockMode.Locked)
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+            GamePaused?.Invoke(true);
+        }
+        else if (Cursor.lockState != CursorLockMode.Locked)
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+            GamePaused?.Invoke(false);
+        }
+    }
+
+    void ResetVelocity()
+    {
+        rb.velocity = Vector3.zero;
     }
 
     #region getters and setters (DO NOT OPEN IF NOT NECESSARY, BRAINROT GURANTEED)
@@ -267,7 +291,10 @@ public class PlayerStateMachine : MonoBehaviour
     public float _jumptime { get => jumptime; set => jumptime = value; }
     public float _slideSpeed { get => slideSpeed; set => slideSpeed = value; }
     public float _wallSlideSpeed { get => wallSlideSpeed; set => wallSlideSpeed = value; }
-    public float _dashSpeed { get => dashSpeed; set => dashSpeed = value; }
+    public float _dashSpeed { get => dashSpeed * (dashModifier.value); }
+
+    public FloatValue _DashModifier => dashModifier;
+
     public float _dashtime { get => dashtime; set => dashtime = value; }
     //public float _lookSpeed { get => lookSpeed; set => lookSpeed = value; }
     public float _forceAppliedInAir { get => forceAppliedInAir; set => forceAppliedInAir = value; }

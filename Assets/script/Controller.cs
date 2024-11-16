@@ -89,6 +89,24 @@ public partial class @Controller: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""restart"",
+                    ""type"": ""Button"",
+                    ""id"": ""f1f0d07a-3c21-49d1-9bb5-3141db6dbe56"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Pause/Escape"",
+                    ""type"": ""Button"",
+                    ""id"": ""6cab5516-be42-4ab4-aeb9-95223a475c32"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -212,6 +230,28 @@ public partial class @Controller: IInputActionCollection2, IDisposable
                     ""action"": ""GrappleHold"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""10a0bcdc-1a66-4f70-9b87-e4d5df12dd40"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""restart"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ef28d0d8-75f4-4930-aee4-df7fdbe16d7a"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": ""Press"",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Pause/Escape"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -227,6 +267,8 @@ public partial class @Controller: IInputActionCollection2, IDisposable
         m_player_slide = m_player.FindAction("slide", throwIfNotFound: true);
         m_player_Grapple = m_player.FindAction("Grapple", throwIfNotFound: true);
         m_player_GrappleHold = m_player.FindAction("GrappleHold", throwIfNotFound: true);
+        m_player_restart = m_player.FindAction("restart", throwIfNotFound: true);
+        m_player_PauseEscape = m_player.FindAction("Pause/Escape", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -295,6 +337,8 @@ public partial class @Controller: IInputActionCollection2, IDisposable
     private readonly InputAction m_player_slide;
     private readonly InputAction m_player_Grapple;
     private readonly InputAction m_player_GrappleHold;
+    private readonly InputAction m_player_restart;
+    private readonly InputAction m_player_PauseEscape;
     public struct PlayerActions
     {
         private @Controller m_Wrapper;
@@ -306,6 +350,8 @@ public partial class @Controller: IInputActionCollection2, IDisposable
         public InputAction @slide => m_Wrapper.m_player_slide;
         public InputAction @Grapple => m_Wrapper.m_player_Grapple;
         public InputAction @GrappleHold => m_Wrapper.m_player_GrappleHold;
+        public InputAction @restart => m_Wrapper.m_player_restart;
+        public InputAction @PauseEscape => m_Wrapper.m_player_PauseEscape;
         public InputActionMap Get() { return m_Wrapper.m_player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -336,6 +382,12 @@ public partial class @Controller: IInputActionCollection2, IDisposable
             @GrappleHold.started += instance.OnGrappleHold;
             @GrappleHold.performed += instance.OnGrappleHold;
             @GrappleHold.canceled += instance.OnGrappleHold;
+            @restart.started += instance.OnRestart;
+            @restart.performed += instance.OnRestart;
+            @restart.canceled += instance.OnRestart;
+            @PauseEscape.started += instance.OnPauseEscape;
+            @PauseEscape.performed += instance.OnPauseEscape;
+            @PauseEscape.canceled += instance.OnPauseEscape;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -361,6 +413,12 @@ public partial class @Controller: IInputActionCollection2, IDisposable
             @GrappleHold.started -= instance.OnGrappleHold;
             @GrappleHold.performed -= instance.OnGrappleHold;
             @GrappleHold.canceled -= instance.OnGrappleHold;
+            @restart.started -= instance.OnRestart;
+            @restart.performed -= instance.OnRestart;
+            @restart.canceled -= instance.OnRestart;
+            @PauseEscape.started -= instance.OnPauseEscape;
+            @PauseEscape.performed -= instance.OnPauseEscape;
+            @PauseEscape.canceled -= instance.OnPauseEscape;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -387,5 +445,7 @@ public partial class @Controller: IInputActionCollection2, IDisposable
         void OnSlide(InputAction.CallbackContext context);
         void OnGrapple(InputAction.CallbackContext context);
         void OnGrappleHold(InputAction.CallbackContext context);
+        void OnRestart(InputAction.CallbackContext context);
+        void OnPauseEscape(InputAction.CallbackContext context);
     }
 }
