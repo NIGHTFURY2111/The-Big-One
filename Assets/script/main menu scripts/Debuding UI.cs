@@ -88,20 +88,16 @@ public class DebudingUI : MonoBehaviour
         score = Mathf.RoundToInt(currTime*mult);
         TimeSpan time = TimeSpan.FromSeconds(currTime);
         TimeSpan besttime = TimeSpan.FromSeconds(bestTime);
-        
+       
+
+        ui_elements[0].text = $@"H = {((int)psm._getPCC._currentHorizontalVelocityMagnitude).ToString()}     V = {((int)psm._getPCC.GetCurrentVerticalMagnitude()).ToString()}";
 
 
-        //ui_elements[0].text = (psm._getPCC.GetCurrentHorizontal()).ToString();
-
-
-        ui_elements[0].text = $@"H = {((int)psm._getPCC.GetCurrentHorizontal()).ToString()}     V = {((int)psm._getPCC.GetCurrentVertical()).ToString()}";
-
-
-        //ui_elements[1].text = (psm._getPCC.GetCurrentVertical()).ToString();
         ui_elements[1].text = time.ToString(@"mm\:ss\:fff");
         ui_elements[2].text = "Best time: " + besttime.ToString(@"mm\:ss\:fff");
-        //ui_elements[2].text = psm._getPCC._TGTvelvocity.ToString() +"     "+ psm._getPCC._acceleration.ToString();
+    
+        ui_elements[3].text = psm._getAdrenaline.ToString();
 
-        //Debug.Log(ui_elements[0].name);
+
     }
 }

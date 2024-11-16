@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e02ac54d065d55840ba4a7bb0041a1c3, type: 3}
+  m_Name: Gear3
+  m_EditorClassIdentifier: 
+  GearLevel: 3
+  walkingSpeed: 0
+  slideSpeed: 0
+  forceAppliedInAir: 0
+  maxVelocityAddedInAir: 0
+  idleDragDebug: 0
+  gravity: 0
+  jumpSpeed: 0
+  wallRunSpeed: 0
+  minWallRunSpeedReq: 0
+  adrenalineDecayRate: 0
+  adrenalineGainMultiplier: 0
+  maxGearSpeedLimit: 0

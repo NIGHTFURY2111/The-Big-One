@@ -29,7 +29,6 @@ public class PlayerStateMachine : MonoBehaviour
     [SerializeField] float idleDragDebug;
     [SerializeField] LayerMask Ground;
 
-
     [Header("Dash Settings")]
     [SerializeField] float dashSpeed;
     [SerializeField] float dashtime;
@@ -38,9 +37,11 @@ public class PlayerStateMachine : MonoBehaviour
     [SerializeField] float wallSlideSpeed;
     [SerializeField] float wallRunTime;
     [SerializeField] float wallRunDecay;
+
     [SerializeField] float wallRunRaycastAngle;
     [SerializeField] float maxWallRaycastDistance;
     [SerializeField] float minWallRunSpeedReq;
+    [SerializeField] float WallRunSpeed;
     [SerializeField] LayerMask Wall;
 
     [Header("Camera Settings")]
@@ -57,6 +58,7 @@ public class PlayerStateMachine : MonoBehaviour
     PlayerCharacterController PCC;
     Rigidbody rb;
     Collider col;
+    Heat heat;
 
 
     float tgtSpeed;
@@ -75,6 +77,7 @@ public class PlayerStateMachine : MonoBehaviour
     private InputAction slide;
     private InputAction grapple;
     private InputAction grappleHold;
+    private InputAction gear;
     private ControllerColliderHit collision;
 
 
@@ -100,7 +103,8 @@ public class PlayerStateMachine : MonoBehaviour
         PCC._setGroundLayer(Ground);
         PCC._setWallLayer(Wall);
 
-
+        heat = GetComponent<Heat>();
+        heat.OnGearChange += UpdateVariablesByGears;
 
         control = new();
 
@@ -111,6 +115,7 @@ public class PlayerStateMachine : MonoBehaviour
         direction = control.player.camera;
         grapple = control.player.Grapple;
         grappleHold = control.player.GrappleHold;
+        gear = control.player.Gear;
 
     }
 
@@ -121,6 +126,7 @@ public class PlayerStateMachine : MonoBehaviour
         jump.Enable();
         slide.Enable();
         direction.Enable();
+        gear.Enable();
         //grapple.Enable();
         //grappleHold.Enable();
     }
@@ -132,6 +138,7 @@ public class PlayerStateMachine : MonoBehaviour
         jump.Disable();
         slide.Disable();
         direction.Disable();
+        gear.Disable();
         //grapple.Disable();
         //grappleHold.Disable();
     }
@@ -248,7 +255,7 @@ public class PlayerStateMachine : MonoBehaviour
         {
             // gameobject.layer takes the specific layer number of the desired layer to be checked, in this case wall is at 7th position in the editor, so it is 7
             // alternative is wall.layer == 1 << collision.gameobject.layer , which essentially is just reverse bit shifting by 7 to check if it is the wall layer
-            if (collision.gameObject.layer == 7) 
+            if (collision.gameObject.layer == 7)
             {
                 wallNormal = collision.contacts[0].normal;
             }
@@ -259,6 +266,33 @@ public class PlayerStateMachine : MonoBehaviour
     {
         Debug.Log(other.gameObject);
     }
+
+    public float GearAxisValue()
+    {
+        if (gear.WasPressedThisFrame()) 
+        {
+            return gear.ReadValue<float>();
+        }
+        return 0f;
+    }
+
+
+    void UpdateVariablesByGears() 
+    { 
+        walkingSpeed = heat._getGearValues.walkingSpeed;
+        slideSpeed = heat._getGearValues.slideSpeed;
+        forceAppliedInAir = heat._getGearValues.forceAppliedInAir;
+        maxVelocityAddedInAir = heat._getGearValues.maxVelocityAddedInAir;
+        idleDragDebug = heat._getGearValues.idleDragDebug;
+        gravity = heat._getGearValues.gravity;
+        jumpSpeed = heat._getGearValues.jumpSpeed;
+
+        WallRunSpeed = heat._getGearValues.wallRunSpeed;
+        minWallRunSpeedReq = heat._getGearValues.minWallRunSpeedReq;
+
+        Debug.Log("Changed");
+    }
+
 
     #region getters and setters (DO NOT OPEN IF NOT NECESSARY, BRAINROT GURANTEED)
     public float _gravity { get => gravity; set => gravity = value; }
@@ -311,6 +345,9 @@ public class PlayerStateMachine : MonoBehaviour
 
     public Vector3 _getWallNormal { get { return wallNormal; } }
 
+    public float _getAdrenaline => heat.GetAdrenaline();
+
+    public float _wallRunSpeed { get => WallRunSpeed; set => WallRunSpeed = value; }
     //public ControllerColliderHit _collision { get { return collision; } set {  collision = value; } }
 
     #endregion

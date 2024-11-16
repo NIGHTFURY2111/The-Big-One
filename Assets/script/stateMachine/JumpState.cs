@@ -35,7 +35,7 @@ public class JumpState : BaseState
 
         ctx._moveDirectionY = ctx._jumpSpeed;
 
-        tgtVelocity = ctx._getPCC.SetCurrentVelocity(ctx._walkingSpeed);
+        //tgtVelocity = ctx._getPCC.SetCurrentVelocity(ctx._walkingSpeed);
 
         test = ctx._getPCC._currentHorizontalVelocityMagnitude;
 

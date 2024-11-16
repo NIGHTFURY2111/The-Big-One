@@ -39,7 +39,7 @@ public class SlideState : BaseState
             percent = elapsedTime / ctx.slideNormalizingTime;
             ctx._TGTSpeed = Mathf.Lerp(ctx._TGTSpeed, ctx._slideSpeed + 20, percent * Time.deltaTime);
         }
-            ctx._getPCC.calculateAccelration(ctx._TGTSpeed);
+        ctx._getPCC.calculateAccelration(ctx._TGTSpeed);
         ctx._moveDirectionX = slidedir.x * ctx._slideSpeed;
         ctx._moveDirectionZ = slidedir.z * ctx._slideSpeed;
         CheckSwitchState();

@@ -13,6 +13,7 @@ public class WallJumpState : BaseState
     Vector3 jumpDir;
     Vector3 lastInput;
     Vector3 wallNormal;
+    RaycastHit hit;
     public WallJumpState(PlayerStateMachine ctx, StateFactory factory) : base(ctx, factory)
     {
         instance = this;
@@ -22,8 +23,9 @@ public class WallJumpState : BaseState
 
     public override void EnterState()
     {
+        hit = ctx._getPCC._wallHit;
         jumpCompleted = false;
-        wallNormal = ctx._getWallNormal;
+        wallNormal = hit.normal;
         jumpDir = Vector3.up + wallNormal; 
         ctx.StartCoroutine(Jumping());
     }
@@ -46,8 +48,8 @@ public class WallJumpState : BaseState
 
     IEnumerator Jumping()
     {
-        ctx._getPCC.WallJumpForce(jumpDir.normalized    ,35f);  
-        yield return new WaitForSecondsRealtime(ctx._jumptime);
+        ctx._getPCC.WallJumpForce(jumpDir.normalized,30f);  
+        yield return new WaitForSecondsRealtime(0.1f);
         jumpCompleted = true;
     }
 
@@ -79,7 +81,7 @@ public class WallJumpState : BaseState
             return;
         }
         //Fall
-        if (ctx._moveDirectionY <= 0f)
+        if (ctx._getPCC.GetCurrentVerticalMagnitude() <= 0f)
         {
             SwitchState(factory.Fall());
             return;

@@ -89,6 +89,15 @@ public partial class @Controller: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Gear"",
+                    ""type"": ""Value"",
+                    ""id"": ""65317e41-68d0-4234-b993-671af639f806"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -212,6 +221,39 @@ public partial class @Controller: IInputActionCollection2, IDisposable
                     ""action"": ""GrappleHold"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""1D Axis"",
+                    ""id"": ""0e08c12f-2dbe-4e4d-b64d-fd7e66fc97e7"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Gear"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""70b8d042-6461-4cc5-8932-a17d436e3c9e"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Gear"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""b18cb6fa-3f47-42d7-af99-3b2d00c676bd"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Gear"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 }
             ]
         }
@@ -227,6 +269,7 @@ public partial class @Controller: IInputActionCollection2, IDisposable
         m_player_slide = m_player.FindAction("slide", throwIfNotFound: true);
         m_player_Grapple = m_player.FindAction("Grapple", throwIfNotFound: true);
         m_player_GrappleHold = m_player.FindAction("GrappleHold", throwIfNotFound: true);
+        m_player_Gear = m_player.FindAction("Gear", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -295,6 +338,7 @@ public partial class @Controller: IInputActionCollection2, IDisposable
     private readonly InputAction m_player_slide;
     private readonly InputAction m_player_Grapple;
     private readonly InputAction m_player_GrappleHold;
+    private readonly InputAction m_player_Gear;
     public struct PlayerActions
     {
         private @Controller m_Wrapper;
@@ -306,6 +350,7 @@ public partial class @Controller: IInputActionCollection2, IDisposable
         public InputAction @slide => m_Wrapper.m_player_slide;
         public InputAction @Grapple => m_Wrapper.m_player_Grapple;
         public InputAction @GrappleHold => m_Wrapper.m_player_GrappleHold;
+        public InputAction @Gear => m_Wrapper.m_player_Gear;
         public InputActionMap Get() { return m_Wrapper.m_player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -336,6 +381,9 @@ public partial class @Controller: IInputActionCollection2, IDisposable
             @GrappleHold.started += instance.OnGrappleHold;
             @GrappleHold.performed += instance.OnGrappleHold;
             @GrappleHold.canceled += instance.OnGrappleHold;
+            @Gear.started += instance.OnGear;
+            @Gear.performed += instance.OnGear;
+            @Gear.canceled += instance.OnGear;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -361,6 +409,9 @@ public partial class @Controller: IInputActionCollection2, IDisposable
             @GrappleHold.started -= instance.OnGrappleHold;
             @GrappleHold.performed -= instance.OnGrappleHold;
             @GrappleHold.canceled -= instance.OnGrappleHold;
+            @Gear.started -= instance.OnGear;
+            @Gear.performed -= instance.OnGear;
+            @Gear.canceled -= instance.OnGear;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -387,5 +438,6 @@ public partial class @Controller: IInputActionCollection2, IDisposable
         void OnSlide(InputAction.CallbackContext context);
         void OnGrapple(InputAction.CallbackContext context);
         void OnGrappleHold(InputAction.CallbackContext context);
+        void OnGear(InputAction.CallbackContext context);
     }
 }

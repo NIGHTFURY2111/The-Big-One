@@ -25,6 +25,8 @@ public class PlayerCharacterController : AbstractCharacterController
     LayerMask Ground;
     LayerMask Wall;
 
+    RaycastHit wallHitReturn;
+
     public PlayerCharacterController(Rigidbody rb,Collider col)
     {
         this.rb = rb;
@@ -89,18 +91,19 @@ public class PlayerCharacterController : AbstractCharacterController
 
     public void JumpForce(float jumpForce)
     {
-        float upForce = Mathf.Clamp(jumpForce - rb.velocity.y, 0, Mathf.Infinity);  
-        rb.AddForce(new Vector3(0, upForce, 0), ForceMode.VelocityChange);
+        //float upForce = Mathf.Clamp(jumpForce - rb.velocity.y, 0, Mathf.Infinity);  
+        rb.AddForce(new Vector3(0, jumpForce, 0), ForceMode.VelocityChange);
         //rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
     }
 
     public void WallJumpForce(Vector3 Dir, float jumpForce)
     {
         //float upForce = Mathf.Clamp(jumpForce - rb.velocity.y, 0, Mathf.Infinity);
-        Debug.Log(Dir * jumpForce);
         rb.AddForce(Dir*jumpForce, ForceMode.VelocityChange);
     }
 
+
+    //what even is this function for?
     public float SetCurrentVelocity(float defaultStateVel)
     {
         return (_currentVelocityMagnitude <= defaultStateVel) ? defaultStateVel : _currentVelocityMagnitude + defaultStateVel; 
@@ -124,6 +127,7 @@ public class PlayerCharacterController : AbstractCharacterController
         Vector3 rightVectorLower = Quaternion.AngleAxis(-angleToRotateBy, rb.transform.up) * rb.transform.right;
         isWall = Physics.Raycast(rb.transform.position, rightVectorUpper, out hit, rayCastDistance,Wall) || Physics.Raycast(rb.transform.position, rightVectorLower, out hit, rayCastDistance, Wall);
         
+        wallHitReturn = hit;
         return isWall;
     }
 
@@ -134,6 +138,8 @@ public class PlayerCharacterController : AbstractCharacterController
         Vector3 leftVectorLower = Quaternion.AngleAxis(-(angleToRotateBy+180), rb.transform.up) * rb.transform.right;
         isWall = Physics.Raycast(rb.transform.position, leftVectorUpper,out hit, rayCastDistance, Wall) || Physics.Raycast(rb.transform.position, leftVectorLower,out hit, rayCastDistance, Wall);  
 
+       
+        wallHitReturn = hit;
         return isWall;
     }
 
@@ -142,11 +148,11 @@ public class PlayerCharacterController : AbstractCharacterController
         rb.velocity = Vector3.zero; 
     }
 
-    public float GetCurrentHorizontal()
+    public Vector2 GetCurrentHorizontal()
     {
-        return new Vector2(rb.velocity.x, rb.velocity.z).magnitude;
+        return new Vector2(rb.velocity.x, rb.velocity.z);
     }
-    public float GetCurrentVertical()
+    public float GetCurrentVerticalMagnitude()
     { 
         return rb.velocity.y;
     }
@@ -172,6 +178,8 @@ public class PlayerCharacterController : AbstractCharacterController
     public float _TGTvelvocity{ get { return TGTvelocityMagnitude; } }
 
     public Rigidbody _rb { get { return rb; } }
+
+    public RaycastHit _wallHit { get { return wallHitReturn; } }
 
     
     #endregion

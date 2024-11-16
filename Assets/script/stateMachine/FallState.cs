@@ -33,7 +33,7 @@ public class FallState : BaseState
 
         tgtVelocity = ctx._getPCC._currentVelocityMagnitude;
         ctx._getPCC.SetMaxlinVel(500);
-        ctx._getPCC.SetCurrentVelocity(ctx._getPCC._currentVelocityMagnitude);
+        //ctx._getPCC.SetCurrentVelocity(ctx._getPCC._currentVelocityMagnitude);
 
         test = ctx._getPCC._currentHorizontalVelocityMagnitude;
             
