@@ -109,7 +109,6 @@ GameObject:
   - component: {fileID: 659116974562575882}
   - component: {fileID: 200485350290688241}
   - component: {fileID: 145696063275946064}
-  - component: {fileID: 8076661358528063173}
   m_Layer: 0
   m_Name: player
   m_TagString: Player
@@ -243,6 +242,7 @@ MonoBehaviour:
   wallRunRaycastAngle: 10
   maxWallRaycastDistance: 2
   minWallRunSpeedReq: 30
+  WallRunSpeed: 0
   Wall:
     serializedVersion: 2
     m_Bits: 128
@@ -335,22 +335,6 @@ MonoBehaviour:
   m_DefaultActionMap: player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
---- !u!114 &8076661358528063173
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4695073335068695945}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a2a24f8ee8397d04dbbb011ca7bf8c0f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  AdrenalineOverflowThreshold: 100
-  MaxAdrenaline: 300
-  AdrenalineOverflowDecayRate: 2
-  GearDecayRate: 0000000003000000070000000a0000000f000000
 --- !u!1 &6613162013591696702
 GameObject:
   m_ObjectHideFlags: 0
