@@ -285,11 +285,6 @@ public class PlayerStateMachine : MonoBehaviour
         }
     }
 
-    private void OnTriggerExit(Collider other)
-    {
-        Debug.Log(other.gameObject);
-    }
-
 
     public void ShootGun()
     {
