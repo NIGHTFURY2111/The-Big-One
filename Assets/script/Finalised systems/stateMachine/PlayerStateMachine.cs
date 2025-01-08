@@ -168,7 +168,7 @@ public class PlayerStateMachine : MonoBehaviour
 
         if (enumum.HasFlag(temp))
         {
-            Debug.Log(true);
+            //Debug.Log(true);
         }
         temp = temp | StateEnum.fall;
 

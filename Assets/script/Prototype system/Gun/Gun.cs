@@ -87,44 +87,47 @@ public class Gun : MonoBehaviour
             bool impactMade = (Physics.Raycast(cameraTransform.position, direction, out RaycastHit hit, float.MaxValue, HitMask))? true: false;
             bool bounceImpact = false;
 
+            Debug.Log(hit.collider);
+            if (!hit.collider.IsUnityNull() && hit.collider.gameObject.layer == (Mathf.Log(EnemyMask.value,2)))
+            {
+                Debug.Log("auihghaui");
+                bounceImpact = (Physics.Raycast(cameraTransform.position, direction, float.MaxValue, BounceMask)) ? true : false;
+            }
+            else if (magnetableEnemies.Count > 0)
+            {
+                DetectNearestEnemy();
 
-                if (hit.IsUnityNull() && hit.collider.gameObject.layer == EnemyMask )
+                if (magnetableEnemies[0] == null)
                 {
-                    Debug.Log("auihghaui");
-                    bounceImpact = (Physics.Raycast(cameraTransform.position, direction, float.MaxValue, BounceMask)) ? true : false;
+                    magnetableEnemies.RemoveAt(0);
                 }
-                else 
-                {
-                    if (magnetableEnemies.Count > 0)
-                    {
-                        DetectNearestEnemy();
 
-                        Vector3 vectorToEnemy = magnetableEnemies[0].transform.position - cameraTransform.position;
-                        float dotEnemyToRayCentre = Vector3.Dot(vectorToEnemy, cameraTransform.forward);
-                        Vector3 projectedPoint = (cameraTransform.position) + (dotEnemyToRayCentre * 0.99f* cameraTransform.forward);
-                        Vector3 PointToShoot = magnetableEnemies[0].GetComponent<Collider>().ClosestPointOnBounds(projectedPoint);
+                Vector3 vectorToEnemy = magnetableEnemies[0].transform.position - cameraTransform.position;
+                float dotEnemyToRayCentre = Vector3.Dot(vectorToEnemy, cameraTransform.forward);
+                Vector3 projectedPoint = (cameraTransform.position) + (dotEnemyToRayCentre * 0.99f * cameraTransform.forward);
+                Vector3 PointToShoot = magnetableEnemies[0].GetComponent<Collider>().ClosestPointOnBounds(projectedPoint);
 
 
-                        debugPoint.transform.position = PointToShoot;
-                        direction = (PointToShoot - cameraTransform.position).normalized;
+                //debugPoint.transform.position = PointToShoot;
+                direction = (PointToShoot - cameraTransform.position).normalized;
 
-                        impactMade = (Physics.Raycast(cameraTransform.position, direction, out hit, float.MaxValue, HitMask))? true: false;
-                        bounceImpact = (Physics.Raycast(cameraTransform.position, direction, float.MaxValue, BounceMask)) ? true : false;
-                        //StartCoroutine(SpawnTrail(trail, hit.point, hit.normal, BounceDistance, impactMade, bounceImpact ));
+                impactMade = (Physics.Raycast(cameraTransform.position, direction, out hit, float.MaxValue, HitMask)) ? true : false;
+                bounceImpact = (Physics.Raycast(cameraTransform.position, direction, float.MaxValue, BounceMask)) ? true : false;
+                //StartCoroutine(SpawnTrail(trail, hit.point, hit.normal, BounceDistance, impactMade, bounceImpact ));
 
-                    }
-                    else
-                    {
-                        hit.point = BulletSpawnPoint.position + direction * 100;
-                        hit.normal = Vector3.zero;
-                        impactMade = true;
-                        bounceImpact = false;
-                        //StartCoroutine(SpawnTrail(trail, BulletSpawnPoint.position + direction * 100, Vector3.zero, BounceDistance, false));
-                    }
-    
-                }
-                debugPoint.transform.position = hit.point;
-                StartCoroutine(SpawnTrail(trail, hit.point, hit.normal, BounceDistance, impactMade, bounceImpact ));
+            }
+            if (hit.collider.IsUnityNull() || hit.point == Vector3.zero)
+            {
+                hit.point = BulletSpawnPoint.position + direction * 100;
+                hit.normal = cameraTransform.forward;
+                impactMade = true;
+                bounceImpact = false;
+                //StartCoroutine(SpawnTrail(trail, BulletSpawnPoint.position + direction * 100, Vector3.zero, BounceDistance, false));
+            }
+
+            debugPoint.transform.position = hit.point;
+            Debug.Log(hit.point.ToString());
+            StartCoroutine(SpawnTrail(trail, hit.point, hit.normal, BounceDistance, impactMade, bounceImpact ));
 
 
             LastShootTime = Time.time;
@@ -151,8 +154,8 @@ public class Gun : MonoBehaviour
 
         if (MadeImpact)
         {
+            //Debug.Log(HitNormal);
             Instantiate(ImpactParticleSystem, HitPoint, Quaternion.LookRotation(HitNormal));
-
             if (BouncingBullets && BounceDistance > 0 && BounceImpact)
             {
                 Vector3 bounceDirection = (findEnemy(HitPoint) - HitPoint).normalized;
@@ -229,32 +232,33 @@ public class Gun : MonoBehaviour
 
 
     
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider other) 
     {   // uses the cone collider and checks only on the "enemy layer"
      //if (other.CompareTag("Enemy") || other.)
      //   {
+        if (other.gameObject != null && other.CompareTag("Enemy")|| other.CompareTag("Hat"))
+        {
             magnetableEnemies.Add(other.gameObject);
             other.GetComponent<MeshRenderer>().material = debugSeenMaterial;
-            Debug.Log(magnetableEnemies.Count);
-        //}
+        }
+        //Debug.Log(magnetableEnemies.Count);
+
         //Debug.Log(other.name);
     }
 
     private void OnTriggerExit(Collider other)
     {
-     //if (other.CompareTag("Enemy"))
-     //   {
+        //if (other.CompareTag("Enemy"))
+        //   {
+        if (other.gameObject != null && other.CompareTag("Enemy"))
+        {
             magnetableEnemies.Remove(other.gameObject);
             other.GetComponent<MeshRenderer>().material = debugNotMaterial;
-            Debug.Log(magnetableEnemies.Count);
+        }
+            //Debug.Log(magnetableEnemies.Count);
         //}
     }
 
-
-    //float Compensator(float initialDistance)
-    //{
-    //    return bulletCorrectionGraph.Evaluate(initialDistance/distanceDivider);
-    //}
 
     void DetectNearestEnemy()
     {
@@ -277,7 +281,6 @@ public class Gun : MonoBehaviour
         string jjj = "";
         // sorting the list
 
-
         //if direct hit, then put that enemy at the top
         if (Physics.Raycast(cameraTransform.position, cameraTransform.forward, out RaycastHit hit, float.MaxValue, LayerMask.GetMask("Enemy")))
         {
@@ -291,6 +294,11 @@ public class Gun : MonoBehaviour
         #region coloring the enemies for debuggign
         foreach (GameObject enemy in magnetableEnemies)
         {
+            if (enemy == null)
+            {
+                magnetableEnemies.RemoveAt(0);
+                break;
+            }
             if (enemy == magnetableEnemies[0])
             {
                 magnetableEnemies[0].GetComponent<MeshRenderer>().material = debugSelectedMaterial;
